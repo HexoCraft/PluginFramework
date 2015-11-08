@@ -311,7 +311,7 @@ public class BaseConfig<PluginClass extends BasePlugin> extends BaseObject<Plugi
             fullpath = line;
 
             // Find all comments
-            if(!line.isEmpty() && trimeLine.charAt(0)=='#')
+            if(!trimeLine.isEmpty() && trimeLine.charAt(0)=='#')
             {
                 comments.add(buffer.get(i).trim());
                 continue;
