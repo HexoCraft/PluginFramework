@@ -204,6 +204,14 @@ public class BaseConfig<PluginClass extends BasePlugin> extends BaseObject<Plugi
         }
     }
 
+    /**
+     * @return Teh tempalte name
+     */
+    public String GetTemplateName()
+    {
+        return templateName;
+    }
+
     public boolean save()
     {
         try
@@ -311,13 +319,11 @@ public class BaseConfig<PluginClass extends BasePlugin> extends BaseObject<Plugi
             fullpath = line;
 
             // Find all comments
-            if(!trimeLine.isEmpty())
+            if(trimeLine.isEmpty())
+                continue;
+            if(trimeLine.charAt(0) == '#')
             {
-                if(trimeLine.charAt(0) == '#')
-                {
-                    comments.add(buffer.get(i).trim());
-                    continue;
-                }
+                comments.add(buffer.get(i).trim()); continue;
             }
 
             // Found comment Header
