@@ -23,6 +23,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Utility class for chest
@@ -87,6 +88,17 @@ public class ChestUtil
         if (holder == null) throw new NullPointerException("holder");
 
         return holder instanceof Chest;
+    }
+
+    /**
+     * Checks if the ItemStack is a chest
+     *
+     * @param itemStack ItemStack to check
+     * @return Is this itemStack a chest?
+     */
+    public static boolean isChest(ItemStack itemStack)
+    {
+        return isChest(itemStack.getType());
     }
 
     /**
