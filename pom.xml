@@ -113,6 +113,7 @@
 
     <!-- Options de build -->
     <build>
+        <defaultGoal>clean install</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <finalName>${plugin.name}-${plugin.version}</finalName>
 
