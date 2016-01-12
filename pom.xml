@@ -23,7 +23,7 @@
     <groupId>com.github.hexosse</groupId>
     <artifactId>BasePlugin</artifactId>
     <name>BasePlugin</name>
-    <version>0.3.5</version>
+    <version>0.3.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Tools used in my Spigot plugin developments</description>
     <url>https://github.com/hexosse/BasePlugin</url>
@@ -114,7 +114,7 @@
     <!-- Options de build -->
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
-        <finalName>${plugin.name}</finalName>
+        <finalName>${plugin.name}-${plugin.version}</finalName>
 
         <!-- Ressources -->
         <resources>
