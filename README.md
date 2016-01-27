@@ -1,1 +1,1 @@
-# PluginFramework [![Build Status](https://drone.io/github.com/hexosse/BasePlugin/status.png)](https://drone.io/github.com/hexosse/BasePlugin/latest)
+# PluginFramework [![Build Status](https://drone.io/github.com/hexosse/BasePlugin/status.png)](https://drone.io/github.com/hexosse/BasePlugin/latest) [![Build Status](https://travis-ci.org/hexosse/PluginFramework.svg?branch=master)](https://travis-ci.org/hexosse/PluginFramework)
