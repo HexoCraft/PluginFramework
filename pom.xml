@@ -21,12 +21,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.hexosse</groupId>
-    <artifactId>BasePlugin</artifactId>
-    <name>BasePlugin</name>
+    <artifactId>pluginframework</artifactId>
+    <name>PluginFramework</name>
     <version>0.3.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Tools used in my Spigot plugin developments</description>
-    <url>https://github.com/hexosse/BasePlugin</url>
+    <url>https://github.com/hexosse/PluginFramework</url>
 
 
     <!-- License -->
@@ -41,9 +41,9 @@
 
     <!-- scm -->
     <scm>
-        <connection>scm:git:git://github.com/hexosse/BasePlugin.git</connection>
-        <developerConnection>scm:git:git@github.com:hexosse/BasePlugin.git</developerConnection>
-        <url>https://github.com/hexosse/BasePlugin</url>
+        <connection>scm:git:git://github.com/hexosse/PluginFramework.git</connection>
+        <developerConnection>scm:git:git@github.com:hexosse/PluginFramework.git</developerConnection>
+        <url>https://github.com/hexosse/PluginFramework</url>
     </scm>
 
 
@@ -92,7 +92,7 @@
     </repositories>
 
 
-    <!-- Mettre ici la liste des dépendances du projet-->
+    <!-- Mettre ici la liste des dépendances du projet -->
     <dependencies>
         <!--Spigot-API-->
         <dependency>
@@ -101,10 +101,22 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency> -->
         <!--Bukkit API-->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -192,8 +204,8 @@
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
                         <manifestEntries>
-                            <Name>${project.name}</Name>
-                            <Version>${project.version}</Version>
+                            <Plugin-Name>${project.name}</Plugin-Name>
+                            <Plugin-Version>${project.version}</Plugin-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>

@@ -1,0 +1,3 @@
+Voir pout faire evoluer base plugin :
+ - renommer le package plugin framework
+ - voir : https://github.com/DarkBlade12/ParticleDemo/tree/master/src/com/darkblade12/particledemo/framework
