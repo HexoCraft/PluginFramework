@@ -107,19 +107,19 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency> -->
-        <!--Bukkit API-->
+        <!-- Bukkit API -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
 
