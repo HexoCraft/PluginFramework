@@ -1,1 +1,0 @@
-https://github.com/MassiveCraft/MassiveCore/blob/e0b79d504dbf74c8af9fcc1db7c9fd254b05f40c/src/com/massivecraft/mcore1/util/SmokeUtil.java

@@ -1,0 +1,13 @@
+Voir pout faire evoluer base plugin :
+
+ - voir :
+     https://bitbucket.org/inventivetalent/packetlistener/src/17cd529e65d7/PacketListenerAPI/src/de/inventivegames/packetlistener/?at=master
+    https://github.com/DarkBlade12/ParticleDemo/tree/master/src/com/darkblade12/particledemo/framework
+    https://github.com/MassiveCraft/MassiveCore/blob/e0b79d504dbf74c8af9fcc1db7c9fd254b05f40c/src/com/massivecraft/mcore1/util/SmokeUtil.java
+
+
+
+commands mais vieux
+https://github.com/PneumatiCraft/CommandHandler/blob/master/src%2Fmain%2Fjava%2Fcom%2Fpneumaticraft%2Fcommandhandler%2FReverseLengthSorter.java
+https://github.com/PneumatiCraft/LightLevel/blob/master/src%2Fmain%2Fjava%2Fcom%2Ffernferret%2Flightlevel%2FLLPermissions.java
+
