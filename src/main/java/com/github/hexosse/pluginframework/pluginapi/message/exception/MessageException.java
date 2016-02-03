@@ -1,4 +1,4 @@
-package com.github.hexosse.pluginframework.pluginapi.message.exeception;
+package com.github.hexosse.pluginframework.pluginapi.message.exception;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
