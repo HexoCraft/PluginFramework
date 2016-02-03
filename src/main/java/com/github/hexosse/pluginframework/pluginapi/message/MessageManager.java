@@ -22,8 +22,6 @@ public class MessageManager<PluginClass extends BasePlugin> extends BaseObject<P
      */
     public MessageManager(PluginClass plugin) { super(plugin); }
 
-
-
     public void send(MessageTarget target, Message message)
     {
         List<CommandSender> targets = target.getTargets();

@@ -11,3 +11,16 @@ commands mais vieux
 https://github.com/PneumatiCraft/CommandHandler/blob/master/src%2Fmain%2Fjava%2Fcom%2Fpneumaticraft%2Fcommandhandler%2FReverseLengthSorter.java
 https://github.com/PneumatiCraft/LightLevel/blob/master/src%2Fmain%2Fjava%2Fcom%2Ffernferret%2Flightlevel%2FLLPermissions.java
 
+
+https://github.com/minnymin3/CommandFramework/blob/master/src%2Fjava%2Fcom%2Fminnymin%2Fcommand%2FCommandFramework.java
+
+
+
+Hologram
+https://github.com/BattlePlugins/BattleBukkitLib/blob/master/modules%2FBattleBukkitLib%2Fsrc%2Fmain%2Fjava%2Fmc%2Falk%2Futil%2FHologramUtil.java
+
+
+
+Channel Worldeit et CUI
+https://github.com/sk89q/WorldEdit/blob/master/worldedit-bukkit%2Fsrc%2Fmain%2Fjava%2Fcom%2Fsk89q%2Fworldedit%2Fbukkit%2FWorldEditPlugin.java
+

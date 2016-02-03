@@ -20,8 +20,7 @@ public class CommandUtil {
     /**
      * Creates a new CommandUtil under the specified plugin.
      *
-     * @param p
-     *            The plugin that uses this.
+     * @param p The plugin that uses this.
      */
     public CommandUtil(JavaPlugin p) {
         mc = new ArrayList<String>();
@@ -36,12 +35,9 @@ public class CommandUtil {
      * Registers command information that can be easily obtained by the user of
      * the plugin.
      *
-     * @param command
-     *            The command to register the help under.
-     * @param syntax
-     *            The syntax of the command.
-     * @param description
-     *            The description of the command.
+     * @param command The command to register the help under.
+     * @param syntax The syntax of the command.
+     * @param description The description of the command.
      */
     public void registerHelp(String command, String syntax, String description) {
         String[] arr = new String[2];
