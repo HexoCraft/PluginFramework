@@ -7,7 +7,7 @@
 *.ear
 
 # Folders #
-target
+.\target
 
 # Inteliij #
 .idea
