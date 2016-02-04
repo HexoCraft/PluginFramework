@@ -9,20 +9,21 @@ import java.util.List;
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class MessageTarget {
 
+public class MessageTarget
+{
     private List<CommandSender> targets;
 
-    public MessageTarget(List<CommandSender> commandSenders){
-        targets = commandSenders;
+    public MessageTarget(List<CommandSender> commandSenders) {
+        this.targets = commandSenders;
     }
 
-    public MessageTarget(CommandSender... commandSender){
-        targets = Lists.newArrayList(commandSender);
+    public MessageTarget(CommandSender... commandSender) {
+        this.targets = Lists.newArrayList(commandSender);
     }
 
-    public MessageTarget(CommandSender commandSender){
-        targets = Lists.newArrayList(commandSender);
+    public MessageTarget(CommandSender commandSender) {
+        this.targets = Lists.newArrayList(commandSender);
     }
 
     public List<CommandSender> getTargets() {

@@ -19,7 +19,7 @@ package com.github.hexosse.pluginframework.utilapi;
 import org.apache.commons.lang.WordUtils;
 
 /**
- * This file is part BasePlugin
+ * This file is part Plugin
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */

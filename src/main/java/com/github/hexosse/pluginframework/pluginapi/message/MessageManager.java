@@ -1,7 +1,7 @@
 package com.github.hexosse.pluginframework.pluginapi.message;
 
-import com.github.hexosse.pluginframework.pluginapi.BaseObject;
-import com.github.hexosse.pluginframework.pluginapi.BasePlugin;
+import com.github.hexosse.pluginframework.pluginapi.PluginObject;
+import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import com.github.hexosse.pluginframework.pluginapi.message.message.Message;
 import com.github.hexosse.pluginframework.pluginapi.message.target.MessageTarget;
 import org.bukkit.ChatColor;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class MessageManager<PluginClass extends BasePlugin> extends BaseObject<PluginClass> {
+public class MessageManager<PluginClass extends Plugin> extends PluginObject<PluginClass> {
 
     /**
      * @param plugin Plugin

@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  */
-public abstract class BasePlugin extends JavaPlugin
+public abstract class Plugin extends JavaPlugin
 {
     /**
      * The logger used by the plugin

@@ -23,7 +23,7 @@ import com.github.hexosse.pluginframework.pluginapi.logging.PluginLogger;
  *
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  */
-public abstract class BaseObject<PluginClass extends BasePlugin> {
+public abstract class PluginObject<PluginClass extends Plugin> {
 
     /**
      * The plugin that created this object.
@@ -39,9 +39,16 @@ public abstract class BaseObject<PluginClass extends BasePlugin> {
     /**
      * @param plugin	The plugin that this object belong to.
      */
-    public BaseObject(PluginClass plugin){
+    public PluginObject(PluginClass plugin){
         this.plugin = plugin;
         this.pluginLogger = plugin.getPluginLogger();
+    }
+
+    /**
+     * @return The logger used by the plugin
+     */
+    public PluginClass getPlugin() {
+        return plugin;
     }
 
     /**

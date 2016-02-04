@@ -1,7 +1,7 @@
 package com.github.hexosse.pluginframework.pluginapi.logging;
 
-import com.github.hexosse.pluginframework.pluginapi.BaseObject;
-import com.github.hexosse.pluginframework.pluginapi.BasePlugin;
+import com.github.hexosse.pluginframework.pluginapi.PluginObject;
+import com.github.hexosse.pluginframework.pluginapi.Plugin;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class PluginLogger<PluginClass extends BasePlugin> extends BaseObject<PluginClass>
+public class PluginLogger<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
     private Logger logger = Logger.getLogger("Minecraft");
 

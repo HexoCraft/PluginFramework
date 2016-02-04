@@ -1,4 +1,4 @@
-package com.github.hexosse.pluginframework.pluginapi.command;
+package com.github.hexosse.pluginframework.pluginapi.command.old;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

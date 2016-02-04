@@ -16,8 +16,8 @@ package com.github.hexosse.pluginframework.pluginapi.config;
  *    limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.BaseObject;
-import com.github.hexosse.pluginframework.pluginapi.BasePlugin;
+import com.github.hexosse.pluginframework.pluginapi.PluginObject;
+import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import com.github.hexosse.pluginframework.pluginapi.config.Location.LocationList;
 import com.google.common.primitives.Primitives;
 import org.bukkit.Bukkit;
@@ -51,7 +51,7 @@ import java.util.Map;
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  * @version 1.0.0
  */
-public class BaseConfig<PluginClass extends BasePlugin> extends BaseObject<PluginClass>
+public class PluginConfig<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
     protected final YamlConfiguration yaml;
     protected final File configFile;
@@ -103,7 +103,7 @@ public class BaseConfig<PluginClass extends BasePlugin> extends BaseObject<Plugi
     }
 
 
-    public BaseConfig(PluginClass plugin, final File configFile)
+    public PluginConfig(PluginClass plugin, final File configFile)
     {
         super(plugin);
         yaml = new YamlConfiguration();
@@ -111,7 +111,7 @@ public class BaseConfig<PluginClass extends BasePlugin> extends BaseObject<Plugi
         this.templateName = null;
     }
 
-    public BaseConfig(PluginClass plugin, final File configFile, final String templateName)
+    public PluginConfig(PluginClass plugin, final File configFile, final String templateName)
     {
         super(plugin);
         yaml = new YamlConfiguration();

@@ -23,7 +23,7 @@ import org.bukkit.block.BlockFace;
 import java.util.ArrayList;
 
 /**
- * This file is part BasePlugin
+ * This file is part Plugin
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */

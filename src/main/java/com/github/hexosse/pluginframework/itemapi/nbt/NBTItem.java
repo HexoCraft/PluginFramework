@@ -20,7 +20,7 @@ package com.github.hexosse.pluginframework.itemapi.nbt;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * This file is part of BasePlugin
+ * This file is part of Plugin
  */
 public class NBTItem {
 

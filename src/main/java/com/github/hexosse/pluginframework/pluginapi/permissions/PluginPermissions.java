@@ -16,8 +16,8 @@ package com.github.hexosse.pluginframework.pluginapi.permissions;
  *    limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.BaseObject;
-import com.github.hexosse.pluginframework.pluginapi.BasePlugin;
+import com.github.hexosse.pluginframework.pluginapi.PluginObject;
+import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
@@ -25,17 +25,17 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
- * This file is part BasePlugin
+ * This file is part Plugin
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class BasePermissions<PluginClass extends BasePlugin> extends BaseObject<PluginClass>
+public class PluginPermissions<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
     /**
      * @param plugin The plugin that this object belong to.
      * @param permissionHolder The class holding all of the {@link PluginPermission} objects.
      */
-    public BasePermissions(PluginClass plugin, Class<?> permissionHolder) {
+    public PluginPermissions(PluginClass plugin, Class<?> permissionHolder) {
         super(plugin);
         registerPermissions(permissionHolder);
     }

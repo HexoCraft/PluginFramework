@@ -1,4 +1,4 @@
-package com.github.hexosse.pluginframework.pluginapi.listeners;
+package com.github.hexosse.pluginframework.pluginapi;
 
 /*
  * Copyright 2015 Hexosse
@@ -16,8 +16,6 @@ package com.github.hexosse.pluginframework.pluginapi.listeners;
  * limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.BaseObject;
-import com.github.hexosse.pluginframework.pluginapi.BasePlugin;
 import org.bukkit.event.Listener;
 
 /**
@@ -25,12 +23,12 @@ import org.bukkit.event.Listener;
  *
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  */
-public abstract class BaseListener<PluginClass extends BasePlugin> extends BaseObject<PluginClass> implements Listener
+public abstract class PluginListener<PluginClass extends Plugin> extends PluginObject<PluginClass> implements Listener
 {
     /**
      * @param plugin The plugin that this listener belongs to.
      */
-    public BaseListener(PluginClass plugin)
+    public PluginListener(PluginClass plugin)
     {
         super(plugin);
     }

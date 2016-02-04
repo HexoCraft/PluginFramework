@@ -1,4 +1,4 @@
-package com.github.hexosse.pluginframework.pluginapi.command;
+package com.github.hexosse.pluginframework.pluginapi.command.old;
 
 /*
  * Copyright 2015 hexosse
@@ -16,8 +16,8 @@ package com.github.hexosse.pluginframework.pluginapi.command;
  *    limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.BaseObject;
-import com.github.hexosse.pluginframework.pluginapi.BasePlugin;
+import com.github.hexosse.pluginframework.pluginapi.PluginObject;
+import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -25,12 +25,12 @@ import org.bukkit.command.CommandSender;
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public abstract class BaseArgsCommand<PluginClass extends BasePlugin> extends BaseObject<PluginClass>
+public abstract class PluginArgsCommand<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
     /**
      * @param plugin The plugin that this object belong to.
      */
-    public BaseArgsCommand(PluginClass plugin)
+    public PluginArgsCommand(PluginClass plugin)
     {
         super(plugin);
     }
