@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SubCmd
 {
-    String name() default "";
     String description() default "";
     String usage() default "";
     String permission() default "";

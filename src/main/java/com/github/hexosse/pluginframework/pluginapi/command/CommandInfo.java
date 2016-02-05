@@ -15,29 +15,29 @@ public class CommandInfo
 {
     private final CommandSender sender;
     private final Player player;
-    private final String baseCommand;
-    private final SubCommand subCommand;
+    private final String commandName;
+    private final Command command;
 
     private List<String> args;
 
     /**
-     * Create a new CommandInfo representing one command invocation.
+     * Create a new CommandInfo representing one commandName invocation.
      * @param sender The CommandSender who invoked this (can be a console)
      * @param player The Player who invoked this (will be null if a console)
-     * @param baseCommand The label of the base command being executed (for reference)
-     * @param subCommand The SubCommand we're executing.
-     * @param args The command arguments.
+     * @param commandName The label of the base commandName being executed (for reference)
+     * @param command The Command we're executing.
+     * @param args The commandName arguments.
      */
-    public CommandInfo(CommandSender sender, Player player, String baseCommand, SubCommand subCommand, List<String> args)
+    public CommandInfo(CommandSender sender, Player player, String commandName, Command command, List<String> args)
     {
         Validate.notNull(sender);
-        Validate.notEmpty(baseCommand);
-        Validate.notNull(subCommand);
+        Validate.notEmpty(commandName);
+        Validate.notNull(command);
         this.sender = sender;
         this.player = player;
         this.args = args;
-        this.baseCommand = baseCommand;
-        this.subCommand = subCommand;
+        this.commandName = commandName;
+        this.command = command;
     }
 
     /**
@@ -50,30 +50,30 @@ public class CommandInfo
 
     /**
      * Get the player who invoked this. Can be null if running at the console.
-     * @return a Player, or null if this is a console command
+     * @return a Player, or null if this is a console commandName
      */
     public Player getPlayer() {
         return player;
     }
 
     /**
-     * Get the base command which was called for this sub-command call.
-     * @return A base command string.
+     * Get the base commandName which was called for this sub-commandName call.
+     * @return A base commandName string.
      */
-    public String getBaseCommand() {
-        return baseCommand;
+    public String getCommandName() {
+        return commandName;
     }
 
     /**
-     * Get the SubCommand that invoked this call.
-     * @return a SubCommand.
+     * Get the Command that invoked this call.
+     * @return a Command.
      */
-    public SubCommand getSubCommand() {
-        return subCommand;
+    public Command getCommand() {
+        return command;
     }
 
     /**
-     * Get the whole list of command arguments.
+     * Get the whole list of commandName arguments.
      * @return List of arguments.
      */
     public List<String> getArgs() {

@@ -2,7 +2,8 @@ package com.github.hexosse.pluginframework.pluginapi.command;
 
 import com.github.hexosse.pluginframework.pluginapi.PluginCommand;
 import com.github.hexosse.pluginframework.pluginapi.command.exception.CommandHandlerException;
-import org.bukkit.command.Command;
+import com.github.hexosse.pluginframework.pluginapi.message.SimpleMessage;
+import com.google.common.collect.Lists;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,10 +14,11 @@ import java.util.*;
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
 
-public class CommandManager implements CommandExecutor, SubCommandHandler
+public class CommandManager implements CommandExecutor, ICommandHandler
 {
-    private static final SubCommandHandler commandHandler = new CommandHandler();
-    private final Map<String, SubCommand> subcommands = new LinkedHashMap<String, SubCommand>();
+    private static final ICommandHandler commandHandler = new CommandHandler();
+    private Command command = null;
+    private final Map<String, Command> subCommands = new LinkedHashMap<String, Command>();
 
     /**
      * Create a new CommandManager, used for dynamic sub command handling.
@@ -29,15 +31,20 @@ public class CommandManager implements CommandExecutor, SubCommandHandler
      */
     public CommandManager(String command, PluginCommand pluginCommand)
     {
-        // register the commands
+        // register the command
         pluginCommand.getPlugin().getCommand(command).setExecutor(this);
-        // register the sub commands
+        // register the sub command
         this.registerCommands(pluginCommand);
+    }
+
+    public void registerCommands(PluginCommand pluginCommand)
+    {
+        new CommandFinder(this).registerMethods(pluginCommand);
     }
 
     /** Implement onCommand so this can be registered as a CommandExecutor */
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args)
     {
         Player player = null;
         if (sender instanceof Player) {
@@ -49,12 +56,11 @@ public class CommandManager implements CommandExecutor, SubCommandHandler
         return false;
     }
 
-
-    /** Implement the SubCommandHandler interface so we can do sub-sub commands and such. */
+    /** Implement the ICommandHandler interface so we can do sub-sub command and such. */
     @Override
     public void handle(CommandInfo call) throws CommandHandlerException
     {
-        String commandLabel = call.getBaseCommand() + " " + call.getSubCommand().name();
+        String commandLabel = call.getCommandName() + " " + call.getCommand().name();
         handleRawCommand(call.getSender(), call.getPlayer(), commandLabel, call.getArgs());
     }
 
@@ -67,42 +73,78 @@ public class CommandManager implements CommandExecutor, SubCommandHandler
      */
     private void handleRawCommand(CommandSender sender, Player player, String commandLabel, List<String> args)
     {
-        // Base command
-        if (args.size() == 0)
+        if (args.size()==0 && command==null)
         {
-            //CommandInfo cmdInfo = new CommandInfo(sender, player, commandLabel, sub, callArgs);
             showUsage(sender, player, commandLabel);
             return;
         }
 
-        // SubCmd command
-        String subcommandName = args.get(0).toLowerCase();
-        SubCommand sub = subcommands.get(subcommandName);
+        
+        // Only BaseCmd can be executed without arguments
+        if (args.size()==0)
+        {
+            if (!command.checkPermission(sender)) {
+                SimpleMessage.warnPermission(sender);
+                return;
+            }
 
-        if (sub == null) {
-            showUsage(sender, player, commandLabel);
-            return;
-        }
-        else if (!sub.checkPermission(sender))
+            CommandInfo call = new CommandInfo(sender, player, commandLabel, command, Lists.<String>newArrayList());
+            try {
+                command.getHandler().handle(call);
+            } catch (CommandHandlerException e) {
+                SimpleMessage.severe(sender, e.getMessage());
+            }
+       }
+        // But when args are present, it could be BaseCmd or SubCmd
+        else
         {
-            //ChatMagic.send(sender, formatter.getPermissionWarning());
-            return;
-        }
-        else if ((args.size() - 1) < sub.minArgs())
-        {
-            //String usageFormat = formatter.getUsageHeading() + "{MCMD}%s %s {USAGE}%s";
-            //ChatMagic.send(sender, usageFormat, commandLabel, sub.name(), sub.usage());
-            return;
-        }
+            // SubCmd or BaseCmd ???
+            // First we check if the first arg correspond to a SubCmd
+            String firstArg = args.get(0).toLowerCase();
+            // Check if a sub command exist fir this arg
+            Command sub = subCommands.get(firstArg);
+            // If yes, this a sub command
+            if (sub != null)
+            {
+                if (!sub.checkPermission(sender)) {
+                    SimpleMessage.warnPermission(sender);
+                    return;
+                }
+                else if ((args.size() - 1) < sub.minArgs()) {
+                    //String usageFormat = formatter.getUsageHeading() + "{MCMD}%s %s {USAGE}%s";
+                    //ChatMagic.send(sender, usageFormat, commandLabel, sub.name(), sub.usage());
+                    return;
+                }
 
-        List<String> callArgs = new ArrayList<String>(args.subList(1, args.size()));
-        CommandInfo call = new CommandInfo(sender, player, commandLabel, sub, callArgs);
-        try
-        {
-            sub.getHandler().handle(call);
-        }
-        catch (CommandHandlerException e) {
-            //call.reply("{ERROR}%s", e.getMessage());
+                List<String> callArgs = new ArrayList<String>(args.subList(1, args.size()));
+                CommandInfo call = new CommandInfo(sender, player, commandLabel, sub, callArgs);
+                try {
+                    sub.getHandler().handle(call);
+                } catch (CommandHandlerException e) {
+                    SimpleMessage.severe(sender, e.getMessage());
+                }
+            }
+            // Else, it could be a command with args
+            else if(command != null)
+            {
+                if (!command.checkPermission(sender)) {
+                    SimpleMessage.warnPermission(sender);
+                    return;
+                }
+                else if ((args.size() - 1) < command.minArgs()) {
+                    //String usageFormat = formatter.getUsageHeading() + "{MCMD}%s %s {USAGE}%s";
+                    //ChatMagic.send(sender, usageFormat, commandLabel, sub.name(), sub.usage());
+                    return;
+                }
+
+                List<String> callArgs = new ArrayList<String>(args.subList(1, args.size()));
+                CommandInfo call = new CommandInfo(sender, player, commandLabel, command, callArgs);
+                try {
+                    command.getHandler().handle(call);
+                } catch (CommandHandlerException e) {
+                    SimpleMessage.severe(sender, e.getMessage());
+                }
+            }
         }
         return;
     }
@@ -112,57 +154,64 @@ public class CommandManager implements CommandExecutor, SubCommandHandler
      * @param sender A CommandSender who is requesting the usage.
      * @param player A Player object (can be null)
      * @param commandLabel The current command label.
-     * @param slash An empty string if there should be a slash prefix, a slash otherwise.
      */
     private void showUsage(CommandSender sender, Player player, String commandLabel)
     {
        /* String headerFormat = formatter.getUsageHeading() + "%s" + formatter.getUsageCommandSuffix();
         ChatMagic.send(sender, headerFormat, commandLabel);
 
-        for (SubCommand sub: getAllowedCommand2s(sender, player)) {
+        for (Command sub: getAllowedCommand2s(sender, player)) {
             formatter.writeUsageLine(sender, commandLabel, sub);
         }*/
     }
 
     /**
      * Add a sub-command to this CommandManager.
-     * @param name The name of this sub-command.
+     * @param commandName The name of this sub-command.
      * @param permission The permission string of a permission to check for this command.
-     * @return a new SubCommand.
+     * @return a new Command.
      */
-    public SubCommand addSub(String name, String permission)
+    public Command addCommand(String commandName, String permission)
     {
-        SubCommand cmd = new SubCommand(name, permission).setHandler(commandHandler);
-        subcommands.put(name.toLowerCase(), cmd);
+        command = new Command(commandName, permission).setHandler(commandHandler);
+        return command;
+    }
+
+    /**
+     * Add a sub-command to this CommandManager.
+     * @param subCommandName The name of this sub-command.
+     * @param permission The permission string of a permission to check for this command.
+     * @return a new Command.
+     */
+    public Command addSubCommand(String subCommandName, String permission)
+    {
+        Command cmd = new Command(subCommandName, permission).setHandler(commandHandler);
+        subCommands.put(subCommandName.toLowerCase(), cmd);
         return cmd;
     }
 
     /**
      * Add a sub-command to this CommandManager.
-     * @param name the name of this sub-command.
-     * @return a new SubCommand.
+     * @param subCommandName the name of this command.
+     * @return a new Command.
      */
-    public SubCommand addSub(String name)
+    public Command addSubCommand(String subCommandName)
     {
-        return addSub(name, null);
+        return addSubCommand(subCommandName, null);
     }
 
-    public void registerCommands(PluginCommand pluginCommand)
-    {
-        new CommandFinder(this).registerMethods(pluginCommand);
-    }
 
     /**
-     * List all registered commands allowed for a sender or a player
+     * List all registered command allowed for a sender or a player
      * @param sender Sender
      * @param player Player
-     * @return List of registered commands allowed
+     * @return List of registered command allowed
      */
-    private List<SubCommand> getAllowedCommand2s(CommandSender sender, Player player)
+    private List<Command> getAllowedCommands(CommandSender sender, Player player)
     {
-        ArrayList<SubCommand> items = new ArrayList<SubCommand>();
+        ArrayList<Command> items = new ArrayList<Command>();
         boolean has_player = (player != null);
-        for (SubCommand sub: subcommands.values())
+        for (Command sub: subCommands.values())
         {
             if ((has_player || sub.allowConsole()) && sub.checkPermission(sender)) {
                 items.add(sub);
@@ -172,12 +221,12 @@ public class CommandManager implements CommandExecutor, SubCommandHandler
     }
 
     /**
-     * List all registerd commands
-     * @return List of registered commands
+     * List all registerd command
+     * @return List of registered command
      */
-    public List<SubCommand> getCommands()
+    public List<Command> getCommand()
     {
-        return new ArrayList<SubCommand>(subcommands.values());
+        return new ArrayList<Command>(subCommands.values());
     }
 }
 

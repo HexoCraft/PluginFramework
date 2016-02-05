@@ -3,7 +3,7 @@ package com.github.hexosse.pluginframework.pluginapi.message;
 import com.github.hexosse.pluginframework.pluginapi.PluginObject;
 import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import com.github.hexosse.pluginframework.pluginapi.message.message.Message;
-import com.github.hexosse.pluginframework.pluginapi.message.target.MessageTarget;
+import com.github.hexosse.pluginframework.pluginapi.message.MessageTarget;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

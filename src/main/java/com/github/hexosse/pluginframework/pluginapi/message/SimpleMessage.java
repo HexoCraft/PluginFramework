@@ -51,6 +51,13 @@ public class SimpleMessage
         warn(target, message);
     }
 
+    public static void warnPermission(CommandSender target)
+    {
+        Message m = new Message(new WarningMessageSeverity());
+        m.add("You do not have permissions for this command.");
+        target.sendMessage(m.getMessages().get(0));
+    }
+
     public static void severe(CommandSender target, String message)
     {
         Message m = new Message(new SevereMessageSeverity());

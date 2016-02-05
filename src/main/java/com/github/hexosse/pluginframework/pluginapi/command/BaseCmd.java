@@ -17,8 +17,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BaseCmd
 {
-    String name() default "";
     String description() default "";
+    String usage() default "";
     String permission() default "";
+    int minArgs() default 0;
     boolean allowConsole() default true;
 }

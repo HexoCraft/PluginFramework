@@ -48,36 +48,34 @@ public class CommandFinder
         }
     }
 
-    private void registerMethod(PluginCommand baseCommand, Method method, BaseCmd baseCmdInfo) {
-        String name = baseCmdInfo.name();
-
-        if (name.equals(""))
-            name = method.getName();
+    private void registerMethod(PluginCommand baseCommand, Method method, BaseCmd baseCmdInfo)
+    {
+        String name = method.getName();
 
         String permission = baseCmdInfo.permission();
         if (permission.equals(""))
             permission = null;
 
-        SubCommand sub = commandManager.addSub(name, permission).description(baseCmdInfo.description());
+        Command base = commandManager.addCommand(name, permission)
+                .minArgs(baseCmdInfo.minArgs())
+                .description(baseCmdInfo.description())
+                .usage(baseCmdInfo.usage());
 
         if (baseCmdInfo.allowConsole())
-            sub = sub.allowConsole(true);
+            base = base.allowConsole(true);
 
-        sub.setHandler(buildCommandHandler(baseCommand, method));
+        base.setHandler(buildCommandHandler(baseCommand, method));
     }
 
     private void registerMethod(PluginCommand baseCommand, Method method, SubCmd subCmdInfo)
     {
-        String name = subCmdInfo.name();
-
-        if (name.equals(""))
-            name = method.getName();
+        String name = method.getName();
 
         String permission = subCmdInfo.permission();
         if (permission.equals(""))
             permission = null;
 
-        SubCommand sub = commandManager.addSub(name, permission)
+        Command sub = commandManager.addSubCommand(name, permission)
                 .minArgs(subCmdInfo.minArgs())
                 .description(subCmdInfo.description())
                 .usage(subCmdInfo.usage());
@@ -88,9 +86,9 @@ public class CommandFinder
         sub.setHandler(buildCommandHandler(baseCommand, method));
     }
 
-    private static SubCommandHandler buildCommandHandler(final PluginCommand baseCommand, final Method method)
+    private static ICommandHandler buildCommandHandler(final PluginCommand baseCommand, final Method method)
     {
-        return new SubCommandHandler()
+        return new ICommandHandler()
         {
             @Override
             public void handle(CommandInfo info) throws CommandHandlerException

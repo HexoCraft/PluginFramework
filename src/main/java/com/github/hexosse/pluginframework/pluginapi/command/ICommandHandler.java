@@ -6,12 +6,12 @@ import com.github.hexosse.pluginframework.pluginapi.command.exception.CommandHan
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
 
-public interface SubCommandHandler {
+public interface ICommandHandler {
     /**
-     * Handle a call from a SubCommand.
+     * Handle a call from a Command.
      *
      * <p>The passed in call has a number of properties, including the Player
-     * (if applicable), CommandSender, information on the SubCommand, and
+     * (if applicable), CommandSender, information on the Command, and
      * any additional arguments passed.
      *
      * <p>If the handler throws a {@link CommandHandlerException}, then the failure's message is

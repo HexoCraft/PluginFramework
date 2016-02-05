@@ -1,41 +1,32 @@
 package com.github.hexosse.pluginframework.pluginapi.command;
 
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
 
-public class BaseCommand implements BaseCmd
+public class Command
 {
     private final String name;
     private String description;
+    private String usage = null;
     private final String permission;
+    private int minArgs = 0;
     private boolean allowConsole = true;
-    private SubCommandHandler handler = null;
+    private ICommandHandler handler = null;
 
     /**
-     * Create a new SubCommand.
+     * Create a new Command.
      * @param name The text of this subcommand.
      * @param permission The permission to check for this command. If null, don't use permissions.
      */
-    public BaseCommand(String name, String permission)
+    public Command(String name, String permission)
     {
         Validate.notEmpty(name);
         this.name = name;
         this.permission = permission;
-    }
-
-    /**
-     * Returns the annotation type of this annotation.
-     */
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return BaseCmd.class;
     }
 
     /**
@@ -53,9 +44,9 @@ public class BaseCommand implements BaseCmd
      * the command does. Long descriptions will probably wrap poorly.
      * .
      * @param description Description text.
-     * @return the SubCommand, useful for chaining.
+     * @return the Command, useful for chaining.
      */
-    public BaseCommand description(String description) {
+    public Command description(String description) {
         this.description = description;
         return this;
     }
@@ -69,6 +60,28 @@ public class BaseCommand implements BaseCmd
     }
 
     /**
+     * Set this command's usage string.
+     *
+     * The usage string describes the parameters to this command in a visual
+     * manner, for display to the user.
+     *
+     * @param usage a usage string.
+     * @return the Command, useful for chaining.
+     */
+    public Command usage(String usage) {
+        this.usage = usage;
+        return this;
+    }
+
+    /**
+     * Get the usage string.
+     * @return The usage string.
+     */
+    public String usage() {
+        return this.usage;
+    }
+
+    /**
      * Get the permission node this command is required to use.
      * @return permission node, or null if no permission.
      */
@@ -77,10 +90,30 @@ public class BaseCommand implements BaseCmd
     }
 
     /**
+     * Set the minimum number of arguments this command accepts.
+     *
+     * If minArgs is >0, then the handler will not be executed unless this
+     * many arguments to the command are present.
+     *
+     * @param minArgs The minimum number of args
+     * @return the Command, useful for chaining.
+     */
+    public Command minArgs(int minArgs) {
+        Validate.isTrue(minArgs >= 0, "minArgs cannot be negative");
+        this.minArgs = minArgs;
+        return this;
+    }
+
+    /** Check what the minimum number of args is */
+    public int minArgs() {
+        return minArgs;
+    }
+
+    /**
      * Allow this command to be used on the console.
      * If this is not set, then the command only works for players.
      */
-    public BaseCommand allowConsole(boolean allowConsole) {
+    public Command allowConsole(boolean allowConsole) {
         this.allowConsole = allowConsole;
         return this;
     }
@@ -91,21 +124,21 @@ public class BaseCommand implements BaseCmd
     }
 
     /**
-     * Set the SubCommandHandler.
-     * @param handler A SubCommandHandler which is called when this command executes.
-     * @return the SubCommand, useful for chaining.
+     * Set the ICommandHandler.
+     * @param handler A ICommandHandler which is called when this command executes.
+     * @return the Command, useful for chaining.
      */
-    public BaseCommand setHandler(SubCommandHandler handler) {
+    public Command setHandler(ICommandHandler handler) {
         Validate.notNull(handler);
         this.handler = handler;
         return this;
     }
 
     /**
-     * Get the currently set SubCommandHandler.
-     * @return the SubCommandHandler which is called when this command executes.
+     * Get the currently set ICommandHandler.
+     * @return the ICommandHandler which is called when this command executes.
      */
-    public SubCommandHandler getHandler() {
+    public ICommandHandler getHandler() {
         return handler;
     }
 
@@ -120,3 +153,4 @@ public class BaseCommand implements BaseCmd
         return sender.hasPermission(permission);
     }
 }
+
