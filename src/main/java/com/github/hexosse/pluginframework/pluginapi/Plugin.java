@@ -18,6 +18,12 @@ package com.github.hexosse.pluginframework.pluginapi;
 
 import com.github.hexosse.pluginframework.pluginapi.logging.PluginLogger;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageManager;
+import com.github.hexosse.pluginframework.pluginapi.reflexion.Reflexion;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -30,12 +36,17 @@ public abstract class Plugin extends JavaPlugin
     /**
      * The logger used by the plugin
      */
-    protected PluginLogger pluginLogger = new PluginLogger(this);
+    public PluginLogger pluginLogger = new PluginLogger(this);
 
     /**
-     * Message manager used to standardise messages
+     * Message manager used to standardise lines
      */
-    protected MessageManager messageManager = new MessageManager(this);
+    public MessageManager messageManager = new MessageManager(this);
+
+    /**
+     * Stores the proper bukkit command map.
+     */
+    private CommandMap commandMap = null;
 
 
     /**
@@ -50,5 +61,37 @@ public abstract class Plugin extends JavaPlugin
      */
     public MessageManager getMessageManager() {
         return messageManager;
+    }
+
+
+    public void registerEvents(PluginListener listener)
+    {
+        if(!this.isEnabled()) {
+            throw new IllegalPluginAccessException("Plugin attempted to register " + listener + " while not enabled");
+        }
+        this.getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+
+    public void registerCommands(Command command)
+    {
+        if(!this.isEnabled())
+            throw new IllegalPluginAccessException("Plugin attempted to register " + command + " while not enabled");
+
+        getCommandMap().register(this.getDescription().getName(),command);
+    }
+
+    private CommandMap getCommandMap()
+    {
+        // return default command map
+        if(this.commandMap!=null) return this.commandMap;
+
+        // read command map
+        CommandMap commandMap = Reflexion.getField(this.getServer().getPluginManager(), "commandMap");
+
+        // cache command map
+        if(commandMap!=null) return (this.commandMap = commandMap);
+
+        return null;
     }
 }

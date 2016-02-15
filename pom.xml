@@ -94,7 +94,7 @@
 
     <!-- Mettre ici la liste des dépendances du projet -->
     <dependencies>
-        <!--Spigot-API-->
+        <!-- Spigot-API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -108,12 +108,12 @@
             <scope>provided</scope>
         </dependency> -->
         <!-- Bukkit API -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <!-- <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
@@ -234,7 +234,7 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.12</version>
                 <configuration>
-                    <!-- git commit message -->
+                    <!-- git commit predifined -->
                     <message>Maven artifacts for ${project.name} ${project.version}</message>
                     <!-- disable webpage processing -->
                     <noJekyll>true</noJekyll>

@@ -1,14 +1,12 @@
-package com.github.hexosse.pluginframework.pluginapi.message;
+package com.github.hexosse.pluginframework.pluginapi.message.predifined;
 
-import com.github.hexosse.pluginframework.pluginapi.message.message.Message;
-import com.github.hexosse.pluginframework.pluginapi.message.severity.HelpMessageSeverity;
-import com.github.hexosse.pluginframework.pluginapi.message.severity.InfoMessageSeverity;
-import com.github.hexosse.pluginframework.pluginapi.message.severity.SevereMessageSeverity;
-import com.github.hexosse.pluginframework.pluginapi.message.severity.WarningMessageSeverity;
+import com.github.hexosse.pluginframework.pluginapi.message.Message;
+import com.github.hexosse.pluginframework.pluginapi.message.MessageSeverity;
+import com.github.hexosse.pluginframework.pluginapi.message.MessageText;
 import org.bukkit.command.CommandSender;
 
 /**
- * SimpleMessage allow you to send a message with oone line of code.
+ * SimpleMessage allow you to send a predifined with oone line of code.
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
@@ -23,9 +21,9 @@ public class SimpleMessage
 
     public static void help(CommandSender target, String message)
     {
-        Message m = new Message(new HelpMessageSeverity());
+        Message m = new Message(MessageSeverity.INFO);
         m.add(message);
-        target.sendMessage(m.getMessages().get(0));
+        target.sendMessage(m.getLines().get(0).toString());
     }
     public static void help(String message, CommandSender target) {
         help(target, message);
@@ -33,9 +31,9 @@ public class SimpleMessage
 
     public static void info(CommandSender target, String message)
     {
-        Message m = new Message(new InfoMessageSeverity());
+        Message m = new Message(MessageSeverity.INFO);
         m.add(message);
-        target.sendMessage(m.getMessages().get(0));
+        target.sendMessage(m.getLines().get(0).toString());
     }
     public static void info(String message, CommandSender target) {
         info(target, message);
@@ -43,9 +41,9 @@ public class SimpleMessage
 
     public static void warn(CommandSender target, String message)
     {
-        Message m = new Message(new WarningMessageSeverity());
+        Message m = new Message(MessageSeverity.WARNING);
         m.add(message);
-        target.sendMessage(m.getMessages().get(0));
+        target.sendMessage(m.getLines().get(0).toString());
     }
     public static void warn(String message, CommandSender target) {
         warn(target, message);
@@ -53,16 +51,16 @@ public class SimpleMessage
 
     public static void warnPermission(CommandSender target)
     {
-        Message m = new Message(new WarningMessageSeverity());
-        m.add("You do not have permissions for this command.");
-        target.sendMessage(m.getMessages().get(0));
+        Message m = new Message(MessageSeverity.ERROR);
+        m.add(MessageText.commmand_no_permission);
+        target.sendMessage(m.getLines().get(0).toString());
     }
 
     public static void severe(CommandSender target, String message)
     {
-        Message m = new Message(new SevereMessageSeverity());
+        Message m = new Message(MessageSeverity.ERROR);
         m.add(message);
-        target.sendMessage(m.getMessages().get(0));
+        target.sendMessage(m.getLines().get(0).toString());
     }
     public static void severe(String message, CommandSender target) {
         severe(target, message);

@@ -106,16 +106,23 @@ public class Reflexion
 
     /**
      * @param clazz Class that should contain the method
-     * @param name the name of the method
+     * @param fieldName the name of the method
      *
      * @return the {@code Method} object that matches the specified
      * {@code clazz} and {@code name} and {@code parameterTypes}
      */
-    public static Field getField(Class<?> clazz, String name)
+    public static Field getField(Class<?> clazz, String fieldName)
     {
         try {
-            return getFieldWithExecption(clazz, name);
-        } catch (Exception e) {
+            return getDeclaredFieldWithExecption(clazz, fieldName);
+        }
+        catch(Exception e) {
+            try {
+                return getFieldWithExecption(clazz, fieldName);
+            }
+            catch(Exception e2) {
+                e2.printStackTrace();
+            }
             e.printStackTrace();
         }
         return null;
@@ -123,7 +130,7 @@ public class Reflexion
 
     /**
      * @param clazz Class that should contain the field
-     * @param name the name of the filed
+     * @param fieldName the name of the filed
      *
      * @return the {@code Field} that matches the specified
      * {@code clazz} and {@code name}
@@ -131,21 +138,64 @@ public class Reflexion
      * @exception NoSuchMethodException if a matching method is not found
      *            or if the name is "&lt;init&gt;"or "&lt;clinit&gt;".
      */
-    public static Field getFieldWithExecption(Class<?> clazz, String name) throws Exception
+    public static Field getFieldWithExecption(Class<?> clazz, String fieldName) throws Exception
     {
-        Field field = clazz.getField(name);
-        if(field!=null) {
+        Field field = clazz.getField(fieldName);
+        if(field!=null && !field.isAccessible()) {
             setAccessible(field);
             return field;
         }
 
-        Field declaredField = clazz.getDeclaredField(name);
-        if(declaredField!=null) {
+        throw new NoSuchMethodException(clazz.getName() + "." + fieldName);
+    }
+
+    /**
+     * @param clazz Class that should contain the field
+     * @param fieldName the name of the filed
+     *
+     * @return the {@code Field} that matches the specified
+     * {@code clazz} and {@code name}
+     *
+     * @exception NoSuchMethodException if a matching method is not found
+     *            or if the name is "&lt;init&gt;"or "&lt;clinit&gt;".
+     */
+    public static Field getDeclaredFieldWithExecption(Class<?> clazz, String fieldName) throws Exception
+    {
+        Field declaredField = clazz.getDeclaredField(fieldName);
+        if(declaredField!=null && !declaredField.isAccessible()) {
             setAccessible(declaredField);
             return declaredField;
         }
 
-        throw new NoSuchMethodException(clazz.getName() + "." + name);
+        throw new NoSuchMethodException(clazz.getName() + "." + fieldName);
+    }
+
+    /**
+     * Returns a field value from any class.
+     * Note: This ignores security levels defined by the parent class.
+     * @param from
+     * @param fieldName
+     * @param <T>
+     * @return
+     */
+    public static <T> T getField(Object from, String fieldName)
+    {
+        // get class
+        Class<?> clazz = from.getClass ();
+
+        // check the whole class tree
+        do {
+            try
+            {
+                // get the field of this value
+                Field field=getField(clazz, fieldName);
+                if(field!=null)
+                    return (T)field.get(from);
+            } catch(IllegalAccessException ignored) {}
+        } while (clazz.getSuperclass()!=Object.class && ((clazz = clazz.getSuperclass())!=null));
+
+        // in case of failure
+        return null;
     }
 
     /**

@@ -2,9 +2,7 @@ package com.github.hexosse.pluginframework.pluginapi.message;
 
 import com.google.common.collect.Lists;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,6 +11,10 @@ import java.util.List;
 public class MessageTarget
 {
     private List<CommandSender> targets;
+
+    public MessageTarget() {
+        this.targets = Lists.newArrayList();
+    }
 
     public MessageTarget(List<CommandSender> targets) {
         this.targets = targets;
@@ -24,6 +26,11 @@ public class MessageTarget
 
     public MessageTarget(CommandSender commandSender) {
         this.targets = Lists.newArrayList(commandSender);
+    }
+
+    public void add(CommandSender commandSender) {
+		if(commandSender!=null)
+			this.targets.add(commandSender);
     }
 
     public List<CommandSender> getTargets() {

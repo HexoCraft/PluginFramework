@@ -36,15 +36,18 @@ public class PluginPermission {
     protected PermissionDefault defaultValue;
     protected String description;
 
-    public PluginPermission(String node){
+    public PluginPermission(String node)
+    {
         this(node, PermissionDefault.FALSE);
     }
 
-    public PluginPermission(String node, PermissionDefault defaultValue){
+    public PluginPermission(String node, PermissionDefault defaultValue)
+    {
         this(node, defaultValue, "");
     }
 
-    public PluginPermission(String node, PermissionDefault defaultValue, String description){
+    public PluginPermission(String node, PermissionDefault defaultValue, String description)
+    {
         this.node = node;
         this.defaultValue = defaultValue;
         this.description = description;
@@ -53,9 +56,10 @@ public class PluginPermission {
     /**
      * Gets the node for this permission.
      *
-     * @return	The node.
+     * @return The node.
      */
-    public String getNode(){
+    public String getNode()
+    {
         return this.node;
     }
 
@@ -64,7 +68,8 @@ public class PluginPermission {
      *
      * @return The default.
      */
-    public PermissionDefault getDefault(){
+    public PermissionDefault getDefault()
+    {
         return this.defaultValue;
     }
 
@@ -73,7 +78,8 @@ public class PluginPermission {
      *
      * @return The description.
      */
-    public String getDescription(){
+    public String getDescription()
+    {
         return this.description;
     }
 
@@ -82,11 +88,14 @@ public class PluginPermission {
      *
      * @return The list of players.
      */
-    public List<Player> getPlayersWith(){
+    public List<Player> getPlayersWith()
+    {
         ArrayList<Player> players = new ArrayList<Player>();
 
-        for (Player player : Bukkit.getServer().getOnlinePlayers()){
-            if (this.has(player)){
+        for(Player player : Bukkit.getServer().getOnlinePlayers())
+        {
+            if(this.has(player))
+            {
                 players.add(player);
             }
         }
@@ -97,10 +106,12 @@ public class PluginPermission {
     /**
      * Checks to see if a {@link CommandSender} has this permission.
      *
-     * @param sender	The sender to be checked, often a {@link Player}
-     * @return			True if the sender has this permission false if not.
+     * @param sender The sender to be checked, often a {@link Player}
+     *
+     * @return True if the sender has this permission false if not.
      */
-    public boolean has(CommandSender sender){
+    public boolean has(CommandSender sender)
+    {
         return sender.hasPermission(this.node);
     }
 }

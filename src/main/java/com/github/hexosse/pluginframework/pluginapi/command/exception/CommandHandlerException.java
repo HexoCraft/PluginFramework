@@ -8,10 +8,9 @@ public class CommandHandlerException extends Exception
 {
     private static final long serialVersionUID = 4940560265978818401L;
 
-    public CommandHandlerException(String template, Object ... args)
+    public CommandHandlerException(String message)
     {
-        super("todo");
-        //super(ChatMagic.colorize(template, args));
+        super(message);
     }
 }
 

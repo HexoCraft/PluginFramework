@@ -1,9 +1,9 @@
-package com.github.hexosse.pluginframework.pluginapi.message.message;
+package com.github.hexosse.pluginframework.pluginapi.message;
 
-import com.github.hexosse.pluginframework.pluginapi.message.severity.InfoMessageSeverity;
-import com.github.hexosse.pluginframework.pluginapi.message.severity.MessageSeverity;
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.FooterMessage;
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.HeaderMessage;
 import com.google.common.collect.Lists;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 public class Message
 {
     protected MessageSeverity severity;
-    protected List<String> messages;
+    protected List<MessageLine> lines;
     protected String prefix = "";
     protected boolean log = false;
 
@@ -23,67 +23,49 @@ public class Message
 
     public Message()
     {
-        this.severity = new InfoMessageSeverity();
-        this.messages = new ArrayList<String>();
+        this.severity = MessageSeverity.INFO;
+        this.lines = new ArrayList<MessageLine>();
     }
 
-    public Message(List<String> messages)
-    {
-        this.severity = new InfoMessageSeverity();
-        this.messages = messages;
-    }
+	public Message(MessageLine line)
+	{
+		this.severity = MessageSeverity.INFO;
+		this.lines = Lists.newArrayList(line);
+	}
 
-    public Message(String... messages)
-    {
-        this.severity = new InfoMessageSeverity();
-        this.messages = Lists.newArrayList(messages);
-    }
+	public Message(String message)
+	{
+		this.severity = MessageSeverity.INFO;
+		this.lines = Lists.newArrayList(new MessageLine(new MessagePart(message)));
+	}
 
-    public Message(String message)
-    {
-        this.severity = new InfoMessageSeverity();
-        this.messages = Lists.newArrayList(message);
-    }
+	public Message(MessageSeverity severity)
+	{
+		this.severity = severity;
+		this.lines = Lists.newArrayList();
+	}
 
-    public Message(MessageSeverity severity)
-    {
-        this.severity = severity;
-        this.messages = Lists.newArrayList();
-    }
-
-    public Message(MessageSeverity severity, List<String> messages)
+    public Message(MessageSeverity severity, MessageLine line)
     {
         this.severity = severity;
-        this.messages = messages;
-    }
-
-    public Message(MessageSeverity severity, String... messages)
-    {
-        this.severity = severity;
-        this.messages = Lists.newArrayList(messages);
+		this.lines = Lists.newArrayList(line);
     }
 
     public Message(MessageSeverity severity, String message)
     {
         this.severity = severity;
-        this.messages = Lists.newArrayList(message);
+		this.lines = Lists.newArrayList(new MessageLine(new MessagePart(message)));
     }
 
-    public Message add(List<String> messages)
+    public Message add(MessageLine line)
     {
-        this.messages.addAll(messages);
-        return this;
-    }
-
-    public Message add(String... messages)
-    {
-        this.messages.addAll(Lists.newArrayList(messages));
+        this.lines.add(line);
         return this;
     }
 
     public Message add(String message)
     {
-        this.messages.add(message);
+        this.lines.add(new MessageLine(new MessagePart(message)));
         return this;
     }
 
@@ -91,32 +73,49 @@ public class Message
     {
         if(prefix.isEmpty()==false && (message instanceof HeaderMessage || message instanceof FooterMessage))
         {
-            String string = (prefix.isEmpty()==false ? prefix + " " : "");
+            String string = prefix + " " ;
             int length = ChatColor.stripColor(prefix).length();
             int i1 = length /2;
             int i2 = length - i1;
 
-            String mess = message.getMessages().get(0);
-            String stripMess = ChatColor.stripColor(message.getMessages().get(0));
+            String mess = message.getLines().get(0).toString();
+            String stripMess = ChatColor.stripColor(message.getLines().get(0).toString());
             String color = mess.substring(0, mess.length()-stripMess.length());
             mess = color + mess.substring(i1, mess.length()-i2);
 
-            this.messages.add(mess);
+            this.add(new Message(message.getSeverity(),mess));
         }
         else
-            this.messages.addAll(message.getMessages());
+		{
+			List<MessageLine> newLines = Lists.newArrayList();
+			for(MessageLine line : message.getLines())
+			{
+				MessageColor messageColor = new MessageColor(message.getSeverity());
+				MessageLine newLine  = new MessageLine();
+
+				for(MessagePart part : line.getParts())
+				{
+					MessagePart newPart = new MessagePart(part);
+					if(newPart.getColor()==null) newPart.color(messageColor);
+
+					newLine.add(newPart);
+				}
+				newLines.add(newLine);
+			}
+			this.lines.addAll(newLines);
+		}
         return this;
     }
 
     public Message addLine()
     {
-        this.messages.add(ChatColor.STRIKETHROUGH + line('-'));
+        this.add(ChatColor.STRIKETHROUGH.toString() + line('-'));
         return this;
     }
 
     public Message addLine(char c)
     {
-        this.messages.add(ChatColor.STRIKETHROUGH + line(c));
+        this.add(ChatColor.STRIKETHROUGH.toString() + line(c));
         return this;
     }
 
@@ -152,22 +151,9 @@ public class Message
         return string;
     }
 
-    protected void format()
+    public List<MessageLine> getLines()
     {
-        String prefix = (this.prefix.isEmpty()==false ? this.prefix + " " : "");
-
-        for(int i=0; i<this.messages.size(); i++) {
-            this.messages.add(prefix + this.severity.getColor() + this.messages.get(0));
-            this.messages.remove(0);
-        }
-
-        this.formated = true;
-    }
-
-    public List<String> getMessages()
-    {
-        if(formated==false) format();
-        return messages;
+        return lines;
     }
 
     public void setSeverity(MessageSeverity severity) {
@@ -178,7 +164,6 @@ public class Message
     {
         return severity;
     }
-
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;

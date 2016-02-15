@@ -13,11 +13,13 @@ import java.util.logging.Logger;
  */
 public class PluginLogger<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
-    private Logger logger = Logger.getLogger("Minecraft");
+    private Logger logger;
 
 
     public PluginLogger(PluginClass plugin) {
         super(plugin);
+        this.logger = Logger.getLogger(plugin.getName());
+        this.logger.setParent(Logger.getLogger("Minecraft"));
     }
 
 

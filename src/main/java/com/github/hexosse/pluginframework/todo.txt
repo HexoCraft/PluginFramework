@@ -8,11 +8,8 @@ Voir pout faire evoluer base plugin :
 
 
 commands mais vieux
-https://github.com/PneumatiCraft/CommandHandler/blob/master/src%2Fmain%2Fjava%2Fcom%2Fpneumaticraft%2Fcommandhandler%2FReverseLengthSorter.java
 https://github.com/PneumatiCraft/LightLevel/blob/master/src%2Fmain%2Fjava%2Fcom%2Ffernferret%2Flightlevel%2FLLPermissions.java
 
-
-https://github.com/minnymin3/CommandFramework/blob/master/src%2Fjava%2Fcom%2Fminnymin%2Fcommand%2FCommandFramework.java
 
 
 

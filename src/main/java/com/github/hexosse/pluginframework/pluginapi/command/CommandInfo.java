@@ -1,11 +1,12 @@
 package com.github.hexosse.pluginframework.pluginapi.command;
 
+import com.github.hexosse.pluginframework.pluginapi.PluginCommand;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
@@ -16,28 +17,31 @@ public class CommandInfo
     private final CommandSender sender;
     private final Player player;
     private final String commandName;
-    private final Command command;
-
+    private final PluginCommand<?> command;
     private List<String> args;
+    private Map<String,String> namedArgs = new LinkedHashMap<String,String>();
+
 
     /**
      * Create a new CommandInfo representing one commandName invocation.
      * @param sender The CommandSender who invoked this (can be a console)
-     * @param player The Player who invoked this (will be null if a console)
-     * @param commandName The label of the base commandName being executed (for reference)
      * @param command The Command we're executing.
+     * @param label The alias of the command used
      * @param args The commandName arguments.
      */
-    public CommandInfo(CommandSender sender, Player player, String commandName, Command command, List<String> args)
+    public CommandInfo(CommandSender sender, PluginCommand<?> command, String label, String[] args, Map<String,String> namedArgs)
     {
         Validate.notNull(sender);
-        Validate.notEmpty(commandName);
         Validate.notNull(command);
+
+        final Player player = (sender instanceof Player) ? (Player)sender : null;
+
         this.sender = sender;
         this.player = player;
-        this.args = args;
-        this.commandName = commandName;
         this.command = command;
+        this.commandName = command.getName();
+        this.args = new ArrayList<String>(Arrays.asList(args));
+        this.namedArgs = namedArgs;
     }
 
     /**
@@ -68,8 +72,16 @@ public class CommandInfo
      * Get the Command that invoked this call.
      * @return a Command.
      */
-    public Command getCommand() {
+    public PluginCommand<?> getCommand() {
         return command;
+    }
+
+    /**
+     * How many arguments we got.
+     * @return Number of arguments
+     */
+    public int numArgs() {
+        return this.args.size();
     }
 
     /**
@@ -81,41 +93,37 @@ public class CommandInfo
     }
 
     /**
-     * Get a specific argument.
-     * @param index The argument number.
-     * @return The specific argument requested.
+     * Get the first argument.
+     * @return The first argument.
      */
-    public String getArg(int index) {
-        return this.args.get(index);
+    public String getFirstArg()
+    {
+        if(this.args.size()>0)
+            return this.args.get(0);
+        return null;
     }
 
     /**
-     * Get an argument coerced into an int.
-     * @param index the location in the arguments array.
-     * @return The argumnt
+     * Get the last argument.
+     * @return The last argument.
      */
-    public int getIntArg(int index) {
-        return Integer.parseInt(getArg(index));
+    public String getLastArg()
+    {
+        if(this.args.size() > 0)
+            return this.args.get(this.args.size() - 1);
+        return null;
     }
 
-    /**
-     * Get all the arguments after the specified index joined into a single string.
-     *
-     * This is useful if one of your last arguments is a free-form text entry
-     * (like for a chat message, or editing a sign/book text)
-     * @param index The index to start at (inclusive)
-     * @return A single string containing all the arguments till the end
-     */
-    public String getJoinedArgsAfter(int index) {
-        return StringUtils.join(args.subList(index, args.size()), " ");
+
+    public String getNamedArg(String name)
+    {
+        return namedArgs.get(name);
     }
 
-    /**
-     * How many arguments we got.
-     * @return Number of arguments
-     */
-    public int numArgs() {
-        return this.args.size();
+    public void setNamedArg(String name, String value)
+    {
+        namedArgs.put(name, value);
     }
+
 }
 
