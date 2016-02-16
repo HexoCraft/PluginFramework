@@ -157,7 +157,7 @@ public class CommandArgument<T>
 	public MessagePart help()
 	{
 		ComponentBuilder argumentHoverText = new ComponentBuilder("");
-		argumentHoverText.append(MessageText.argument_argument + " : ").color(ChatColor.WHITE).append(getName()).color(MessageColor.ARGUMENT.color());
+		argumentHoverText.append(MessageText.argument_argument + " : ").color(ChatColor.WHITE).append(getName()).color(isMandatory()?MessageColor.ARGUMENT_MANDATORY.color():MessageColor.ARGUMENT_OPTIONAL.color());
 		if(getDescription()!=null && getDescription().isEmpty()==false)
 			argumentHoverText.append("\n").append(MessageText.argument_description + " : ").color(ChatColor.WHITE).append(getDescription()).color(MessageColor.DESCRIPTION.color());
 		if(isMandatory())
@@ -165,6 +165,6 @@ public class CommandArgument<T>
 
 		HoverEvent argumentHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT,argumentHoverText.create());
 		// Add full command to the mine
-		return new MessagePart(" " + getTemplate(this)).color(MessageColor.ARGUMENT).event(argumentHoverEvent);
+		return new MessagePart(" " + getTemplate(this)).color(isMandatory()?MessageColor.ARGUMENT_MANDATORY:MessageColor.ARGUMENT_OPTIONAL).event(argumentHoverEvent);
 	}
 }

@@ -14,8 +14,9 @@ public class MessageColor
 	// Colors used with commands
 	public static MessageColor COMMAND = new MessageColor(ChatColor.AQUA);
 	public static MessageColor SUBCOMMAND = new MessageColor(ChatColor.AQUA);
-	public static MessageColor ARGUMENT = new MessageColor(ChatColor.DARK_AQUA);
-	public static MessageColor DESCRIPTION = new MessageColor(ChatColor.GOLD);
+	public static MessageColor ARGUMENT_MANDATORY = new MessageColor(ChatColor.DARK_GREEN);
+	public static MessageColor ARGUMENT_OPTIONAL = new MessageColor(ChatColor.DARK_AQUA);
+	public static MessageColor DESCRIPTION = new MessageColor(ChatColor.YELLOW);
 
 	// Colors used with predifined severity
 	public static MessageColor INFO = new MessageColor(ChatColor.WHITE);

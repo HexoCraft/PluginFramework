@@ -30,6 +30,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
@@ -79,7 +80,11 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		{
 			CommandInfo mainCommandInfo = new CommandInfo(commandInfo.getSender(), mainCommand, mainCommand.getName(), new String[0], null);
 			CommandMessageHelp mainHelp = new CommandMessageHelp(null, mainCommandInfo);
-			datas.add(new data(mainCommandInfo, mainHelp));
+
+			if(mainCommandInfo.getCommand().getPermission()==null)
+				datas.add(new data(mainCommandInfo, mainHelp));
+			else if(mainCommandInfo.getCommand().getPermission()!=null && mainCommandInfo.getCommand().getPermission().isEmpty()==false && commandInfo.getSender().hasPermission(mainCommandInfo.getCommand().getPermission())==true)
+				datas.add(new data(mainCommandInfo, mainHelp));
 		}
 
 		// Sub command
@@ -89,7 +94,11 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 
 			CommandInfo subCommandInfo = new CommandInfo(commandInfo.getSender(), subCommand, subCommand.getName(), new String[0], null);
 			CommandMessageHelp subHelp = new CommandMessageHelp(null, subCommandInfo);
-			datas.add(new data(subCommandInfo, subHelp));
+
+			if(subCommandInfo.getCommand().getPermission()==null)
+				datas.add(new data(subCommandInfo, subHelp));
+			else if(subCommandInfo.getCommand().getPermission().isEmpty()==false && commandInfo.getSender().hasPermission(subCommandInfo.getCommand().getPermission())==true)
+				datas.add(new data(subCommandInfo, subHelp));
 		}
 
 		// Total number of lines
@@ -101,11 +110,11 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 
 		// Title line
 		MessagePart prev = getPrev(mainCommand, page - 1, maxPages);
-		MessagePart help = new MessagePart(" " + MessageText.help_for_command + " \"" + commandInfo.getCommand().getParentCommand().getName() + "\" ").color(MessageColor.WARNING);
+		MessagePart help = new MessagePart(" " + MessageText.help_for_command + " \"" + commandInfo.getCommand().getParentCommand().getName() + "\" ").color(MessageColor.DESCRIPTION);
 		MessagePart index = getIndex(mainCommand, page, maxPages);
 		MessagePart next = getNext(mainCommand, page + 1, maxPages);
 		int len = (prev.getText() +  help.getText() + index.getText() + next.getText()).length();
-		MessagePart dash = new MessagePart(ChatColor.STRIKETHROUGH + StringUtils.leftPad("", (51-len)/2, "-")).color(MessageColor.WARNING);
+		MessagePart dash = new MessagePart(ChatColor.STRIKETHROUGH + StringUtils.leftPad("", (51-len)/2, "-")).color(MessageColor.DESCRIPTION);
 
 		Message m = new Message(new MessageLine().add(dash).add(prev).add(help).add(index).add(next).add(dash));
 		plugin.messageManager.send(commandInfo,new Message(""));
@@ -172,6 +181,6 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 
 		MessagePart index = new MessagePart(" (" + Integer.toString(pageNumber) + "/" + Integer.toString(totalPage) + ") ");
 
-		return index.color(MessageColor.WARNING);
+		return index.color(MessageColor.DESCRIPTION);
 	}
 }
