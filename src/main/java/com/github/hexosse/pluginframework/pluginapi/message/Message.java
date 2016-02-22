@@ -1,12 +1,29 @@
 package com.github.hexosse.pluginframework.pluginapi.message;
 
-import com.github.hexosse.pluginframework.pluginapi.message.predifined.FooterMessage;
-import com.github.hexosse.pluginframework.pluginapi.message.predifined.HeaderMessage;
+/*
+ * Copyright 2016 hexosse
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.Footer;
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.Header;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
@@ -45,23 +62,47 @@ public class Message
 		this.lines = Lists.newArrayList();
 	}
 
-    public Message(MessageSeverity severity, MessageLine line)
-    {
-        this.severity = severity;
+	public Message(MessageSeverity severity, MessageLine line)
+	{
+		this.severity = severity;
 		this.lines = Lists.newArrayList(line);
-    }
+	}
 
-    public Message(MessageSeverity severity, String message)
-    {
-        this.severity = severity;
+	public Message(MessageSeverity severity, String message)
+	{
+		this.severity = severity;
 		this.lines = Lists.newArrayList(new MessageLine(new MessagePart(message)));
-    }
+	}
 
-    public Message add(MessageLine line)
-    {
-        this.lines.add(line);
-        return this;
-    }
+	public Message(ChatColor color)
+	{
+		this.severity = new MessageSeverity(Level.INFO, color);
+		this.lines = Lists.newArrayList();
+	}
+
+	public Message(ChatColor color, MessageLine line)
+	{
+		this.severity = new MessageSeverity(Level.INFO, color);
+		this.lines = Lists.newArrayList(line);
+	}
+
+	public Message(ChatColor color, String message)
+	{
+		this.severity = new MessageSeverity(Level.INFO, color);
+		this.lines = Lists.newArrayList(new MessageLine(new MessagePart(message)));
+	}
+
+	public Message add(MessageLine line)
+	{
+		this.lines.add(line);
+		return this;
+	}
+
+	public Message add(MessagePart partAsLine)
+	{
+		this.lines.add(new MessageLine(partAsLine));
+		return this;
+	}
 
     public Message add(String message)
     {
@@ -71,7 +112,7 @@ public class Message
 
     public Message add(Message message)
     {
-        if(prefix.isEmpty()==false && (message instanceof HeaderMessage || message instanceof FooterMessage))
+        if(prefix.isEmpty()==false && (message instanceof Header || message instanceof Footer))
         {
             String string = prefix + " " ;
             int length = ChatColor.stripColor(prefix).length();

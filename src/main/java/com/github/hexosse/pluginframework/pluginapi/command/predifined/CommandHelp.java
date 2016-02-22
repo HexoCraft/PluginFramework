@@ -23,15 +23,12 @@ import com.github.hexosse.pluginframework.pluginapi.command.CommandError;
 import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
 import com.github.hexosse.pluginframework.pluginapi.command.type.ArgTypeInteger;
 import com.github.hexosse.pluginframework.pluginapi.message.*;
-import com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandMessageHelp;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
 import java.util.Map;
@@ -61,9 +58,9 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		class data
 		{
 			public CommandInfo commandInfo;
-			public CommandMessageHelp message;
+			public com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp message;
 
-			public data(CommandInfo commandInfo, CommandMessageHelp message)
+			public data(CommandInfo commandInfo, com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp message)
 			{
 				this.commandInfo = commandInfo;
 				this.message = message;
@@ -71,7 +68,7 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		}
 
 		List<data> datas = Lists.newArrayList();
-		int page = Integer.parseInt(commandInfo.getNamedArg("page"));
+		int page = Integer.parseInt(commandInfo.hasNamedArg("page")==true?commandInfo.getNamedArg("page"):"-1");
 		int maxLines = commandInfo.getPlayer()!=null ? 10 : 100;
 
 		// Main command
@@ -79,7 +76,7 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		if(mainCommand.getMaxArgs() > 0)
 		{
 			CommandInfo mainCommandInfo = new CommandInfo(commandInfo.getSender(), mainCommand, mainCommand.getName(), new String[0], null);
-			CommandMessageHelp mainHelp = new CommandMessageHelp(null, mainCommandInfo);
+			com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp mainHelp = new com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp(null, mainCommandInfo);
 
 			if(mainCommandInfo.getCommand().getPermission()==null)
 				datas.add(new data(mainCommandInfo, mainHelp));
@@ -93,7 +90,7 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 			PluginCommand<?> subCommand = entry.getValue();
 
 			CommandInfo subCommandInfo = new CommandInfo(commandInfo.getSender(), subCommand, subCommand.getName(), new String[0], null);
-			CommandMessageHelp subHelp = new CommandMessageHelp(null, subCommandInfo);
+			com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp subHelp = new com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp(null, subCommandInfo);
 
 			if(subCommandInfo.getCommand().getPermission()==null)
 				datas.add(new data(subCommandInfo, subHelp));
@@ -103,7 +100,7 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 
 		// Total number of lines
 		int nbLines = datas.size() + 1;
-		int maxPages = (int)Math.ceil((double)nbLines/(double)maxLines);
+		int maxPages = (page == -1) ? 1 : (int) Math.ceil((double) nbLines / (double) maxLines);
 
 		// Check page number
 		page = (page<=0) ? 1 : ((page>=maxPages) ? maxPages : page);

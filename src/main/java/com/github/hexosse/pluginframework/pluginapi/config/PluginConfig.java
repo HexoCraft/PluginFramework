@@ -1,7 +1,7 @@
 package com.github.hexosse.pluginframework.pluginapi.config;
 
 /*
- * Copyright 2015 hexosse
+ * Copyright 2016 hexosse
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@ package com.github.hexosse.pluginframework.pluginapi.config;
  *    limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.PluginObject;
 import com.github.hexosse.pluginframework.pluginapi.Plugin;
+import com.github.hexosse.pluginframework.pluginapi.PluginObject;
 import com.github.hexosse.pluginframework.pluginapi.config.Location.LocationList;
 import com.google.common.primitives.Primitives;
 import org.bukkit.Bukkit;

@@ -1,7 +1,22 @@
 package com.github.hexosse.pluginframework.pluginapi.command;
 
+/*
+ * Copyright 2016 hexosse
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 import com.github.hexosse.pluginframework.pluginapi.PluginCommand;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -114,15 +129,33 @@ public class CommandInfo
         return null;
     }
 
-
-    public String getNamedArg(String name)
+    /**
+     * @param name Name of the argument
+     *
+     * @return true if exist
+     */
+    public boolean hasNamedArg(String name)
     {
-        return namedArgs.get(name);
+        return namedArgs.containsKey(name);
     }
 
+    /**
+     * @param name Name of the argument
+     * @param value Value of the argument
+     */
     public void setNamedArg(String name, String value)
     {
         namedArgs.put(name, value);
+    }
+
+    /**
+     * @param name Name of the argument
+     *
+     * @return Value of the argument from its name
+     */
+    public String getNamedArg(String name)
+    {
+        return namedArgs.get(name);
     }
 
 }

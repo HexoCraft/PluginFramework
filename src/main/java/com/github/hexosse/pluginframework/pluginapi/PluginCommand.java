@@ -1,19 +1,19 @@
 package com.github.hexosse.pluginframework.pluginapi;
 
 /*
- * Copyright 2015 Hexosse
+ * Copyright 2016 hexosse
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 
 import com.github.hexosse.pluginframework.pluginapi.command.CommandArgument;
@@ -21,9 +21,10 @@ import com.github.hexosse.pluginframework.pluginapi.command.CommandError;
 import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
 import com.github.hexosse.pluginframework.pluginapi.logging.PluginLogger;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageColor;
+import com.github.hexosse.pluginframework.pluginapi.message.MessageManager;
 import com.github.hexosse.pluginframework.pluginapi.message.MessagePart;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageText;
-import com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandMessageHelp;
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp;
 import com.github.hexosse.pluginframework.pluginapi.message.predifined.SimpleMessage;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
@@ -64,6 +65,17 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		return pluginLogger;
 	}
 
+	/**
+	 * The message manager used by the plugin
+	 */
+	protected MessageManager messageManager;
+	/**
+	 * @return The message manager used by the plugin
+	 */
+	public MessageManager getMessageManager() {
+		return messageManager;
+	}
+
 
 
 	/**
@@ -91,6 +103,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		super(name);
 		this.plugin = plugin;
 		this.pluginLogger = plugin.getPluginLogger();
+		this.messageManager = plugin.getMessageManager();
 	}
 
 	/**
@@ -202,6 +215,21 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		return this;
 	}
 
+
+	public PluginCommand<?> removeArgument(String name)
+	{
+		for(CommandArgument<?> argument : this.arguments)
+		{
+			if(argument.getName().toLowerCase().equals(name.toLowerCase()))
+			{
+				this.arguments.remove(argument);
+				return this;
+			}
+		}
+
+		return this;
+	}
+
 	/**
 	 * @return Minimum arguments used by the command
 	 */
@@ -239,11 +267,18 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		}
 		fullCommand = "/" + fullCommand;
 
-		// Full command
+		// Hover text
 		ComponentBuilder fullCommandHoverText = new ComponentBuilder("");
 		fullCommandHoverText.append(MessageText.commmand_command + " : ").color(ChatColor.WHITE).append(fullCommand).color(MessageColor.COMMAND.color());
 		if(getDescription()!=null && getDescription().isEmpty()==false)
-			fullCommandHoverText.append("\n").append(MessageText.commmand_description + " : ").color(ChatColor.WHITE).append(getDescription()).color(MessageColor.DESCRIPTION.color());
+		{
+			String descriptions[] = getDescription().split("\\r?\\n");
+
+			fullCommandHoverText.append("\n").append(MessageText.commmand_description + " : ").color(ChatColor.WHITE).append(descriptions[0]).color(MessageColor.DESCRIPTION.color());
+			for(int i=1; i<descriptions.length; i++)
+				fullCommandHoverText.append("\n").append(descriptions[i]).color(MessageColor.DESCRIPTION.color());
+		}
+
 		fullCommandHoverText.append("\n");
 		fullCommandHoverText.append("\n").append(MessageText.commmand_click_copy_command).color(MessageColor.ERROR.color()).bold(true);
 
@@ -334,7 +369,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		if(isMainCommand==true)
 		{
 			// Send Usage Message
-			CommandMessageHelp message = new CommandMessageHelp(error, commandInfo);
+			CommandHelp message = new CommandHelp(error, commandInfo);
 			plugin.messageManager.send(commandInfo, message);
 		}
 
@@ -342,7 +377,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		else if(isSubCommand==true)
 		{
 			// Send Usage Message
-			CommandMessageHelp message = new CommandMessageHelp(error, commandInfo);
+			CommandHelp message = new CommandHelp(error, commandInfo);
 			plugin.messageManager.send(commandInfo, message);
 		}
 	}
@@ -589,5 +624,4 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		}
 		return completions;
 	}
-
 }

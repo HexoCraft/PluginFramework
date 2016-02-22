@@ -1,5 +1,21 @@
 package com.github.hexosse.pluginframework.pluginapi.message;
 
+/*
+ * Copyright 2016 hexosse
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import com.github.hexosse.pluginframework.pluginapi.PluginObject;
 import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
@@ -26,6 +42,11 @@ public class MessageManager<PluginClass extends Plugin> extends PluginObject<Plu
      */
     public MessageManager(PluginClass plugin) { super(plugin); }
 
+    public void send(CommandSender sender, Message message)
+    {
+        send(new MessageTarget(sender), message);
+    }
+
     public void send(MessageTarget target, Message message)
     {
         List<CommandSender> targets = target.getTargets();
@@ -35,8 +56,8 @@ public class MessageManager<PluginClass extends Plugin> extends PluginObject<Plu
             for (CommandSender sender : targets)
             {
                 if(sender instanceof ConsoleCommandSender)
-					sender.sendMessage((message.getPrefix().isEmpty() == true ? "" : message.getPrefix() + " ") + message.getSeverity().color() + line.toString());
-				if(sender instanceof Player)
+                    sender.sendMessage((message.getPrefix().isEmpty() == true ? "" : message.getPrefix() + " ") + message.getSeverity().color() + line.toString());
+                if(sender instanceof Player)
                     send((Player)sender, message.getPrefix(), message.getSeverity().color(), line);
             }
             if (message.isLog())
@@ -70,7 +91,7 @@ public class MessageManager<PluginClass extends Plugin> extends PluginObject<Plu
 
     private void send(Player player, String prefix, ChatColor messageColor, MessageLine line)
     {
-		ComponentBuilder builder = new ComponentBuilder(prefix);
+        ComponentBuilder builder = new ComponentBuilder(prefix.isEmpty() ? "" : prefix + " ");
 
         for(MessagePart part : line.getParts())
         {

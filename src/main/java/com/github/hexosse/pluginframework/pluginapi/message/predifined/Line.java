@@ -1,4 +1,4 @@
-package com.github.hexosse.pluginframework.pluginapi.command.type;
+package com.github.hexosse.pluginframework.pluginapi.message.predifined;
 
 /*
  * Copyright 2016 hexosse
@@ -16,31 +16,36 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  *    limitations under the License.
  */
 
+import com.github.hexosse.pluginframework.pluginapi.message.Message;
+import com.github.hexosse.pluginframework.pluginapi.message.MessageLine;
+import com.github.hexosse.pluginframework.pluginapi.message.MessageSeverity;
+import net.md_5.bungee.api.ChatColor;
+
+import java.util.List;
+
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class ArgTypeInteger implements ArgType<Integer>
+public class Line extends Message
 {
-	private ArgTypeInteger() {};
-	private static ArgTypeInteger i = new ArgTypeInteger();
-	public static ArgTypeInteger get() { return i; }
-
-	@Override
-	public boolean check(String integer)
+	public Line()
 	{
-		return get(integer)!=null;
+		super();
+		this.severity = MessageSeverity.INFO;
+	}
+
+	public Line(MessageSeverity severity)
+	{
+		super();
+		this.severity = severity;
 	}
 
 	@Override
-	public Integer get(String integer)
+	public List<MessageLine> getLines()
 	{
-		try
-		{
-			return Integer.parseInt(integer);
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-	}
-}
+		if(this.lines.isEmpty() == false)
+			return super.getLines();
+
+		this.add(ChatColor.STRIKETHROUGH + line('-'));
+		return super.getLines();
+	}}
