@@ -24,7 +24,7 @@ import com.github.hexosse.pluginframework.pluginapi.message.MessageColor;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageManager;
 import com.github.hexosse.pluginframework.pluginapi.message.MessagePart;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageText;
-import com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp;
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.Help;
 import com.github.hexosse.pluginframework.pluginapi.message.predifined.SimpleMessage;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
@@ -269,7 +269,18 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 
 		// Hover text
 		ComponentBuilder fullCommandHoverText = new ComponentBuilder("");
+		// Command
 		fullCommandHoverText.append(MessageText.commmand_command + " : ").color(ChatColor.WHITE).append(fullCommand).color(MessageColor.COMMAND.color());
+		// Aliases
+		if(getAliases()!=null && getAliases().isEmpty()==false)
+		{
+			String aliases[] = getAliases().toArray(new String[0]);
+
+			fullCommandHoverText.append("\n").append(MessageText.commmand_aliases + " : ").color(ChatColor.WHITE).append(aliases[0]).color(MessageColor.COMMAND.color());
+			for(int i=1; i<aliases.length; i++)
+				fullCommandHoverText.append(", ").append(aliases[i]).color(MessageColor.COMMAND.color());
+		}
+		// Description
 		if(getDescription()!=null && getDescription().isEmpty()==false)
 		{
 			String descriptions[] = getDescription().split("\\r?\\n");
@@ -369,7 +380,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		if(isMainCommand==true)
 		{
 			// Send Usage Message
-			CommandHelp message = new CommandHelp(error, commandInfo);
+			Help message = new Help(error, commandInfo);
 			plugin.messageManager.send(commandInfo, message);
 		}
 
@@ -377,7 +388,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 		else if(isSubCommand==true)
 		{
 			// Send Usage Message
-			CommandHelp message = new CommandHelp(error, commandInfo);
+			Help message = new Help(error, commandInfo);
 			plugin.messageManager.send(commandInfo, message);
 		}
 	}

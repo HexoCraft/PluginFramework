@@ -27,9 +27,14 @@ import com.github.hexosse.pluginframework.pluginapi.message.*;
  *
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class CommandHelp extends Message
+public class Help extends Message
 {
-	public CommandHelp(CommandError error, CommandInfo commandInfo)
+	public Help(CommandInfo commandInfo)
+	{
+		this(null, commandInfo);
+	}
+
+	public Help(CommandError error, CommandInfo commandInfo)
 	{
 		PluginCommand<?> command = commandInfo.getCommand();
 

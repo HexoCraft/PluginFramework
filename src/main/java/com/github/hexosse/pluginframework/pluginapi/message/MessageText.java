@@ -29,6 +29,7 @@ public class MessageText
 	public static String help_for_command;
 
 	public static String commmand_command;
+	public static String commmand_aliases;
 	public static String commmand_description;
 	public static String commmand_click_copy_command;
 	public static String commmand_no_permission;
@@ -60,6 +61,7 @@ public class MessageText
 		help_for_command = "Help for command";
 
 		commmand_command = "Command";
+		commmand_aliases = "Aliases";
 		commmand_description = "Description";
 		commmand_click_copy_command = "Click to copy the command";
 		commmand_no_permission = "You do not have permission to perform that command !";
@@ -79,6 +81,7 @@ public class MessageText
 		help_for_command = "Aide pour la commande";
 
 		commmand_command = "Commande";
+		commmand_aliases = "Alias";
 		commmand_description = "Description";
 		commmand_click_copy_command = "Click pour copier la commande";
 		commmand_no_permission = "Vous n'avez pas les droits suffisants pour executer cette commande !";

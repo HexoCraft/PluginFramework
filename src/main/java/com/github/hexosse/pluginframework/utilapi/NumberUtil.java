@@ -50,4 +50,31 @@ public class NumberUtil
             return -1;
         }
     }
+
+    /**
+     * Checks if the string is a double
+     *
+     * @param string string to check
+     * @return Is the string double?
+     */
+    public static boolean isDouble(String string) {
+        try {
+            Double.parseDouble(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param string string to convert
+     * @return double representation of the string
+     */
+    public static double ToDouble(String string) {
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
 }

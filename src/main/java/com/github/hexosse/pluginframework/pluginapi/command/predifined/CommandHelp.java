@@ -23,6 +23,7 @@ import com.github.hexosse.pluginframework.pluginapi.command.CommandError;
 import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
 import com.github.hexosse.pluginframework.pluginapi.command.type.ArgTypeInteger;
 import com.github.hexosse.pluginframework.pluginapi.message.*;
+import com.github.hexosse.pluginframework.pluginapi.message.predifined.Help;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -38,10 +39,12 @@ import java.util.Map;
  */
 public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<PluginClass>
 {
+	static String HELP = "help";
+
 	public CommandHelp(PluginClass plugin)
 	{
-		super("help", plugin);
-		this.setAliases(Lists.newArrayList("help", "h", "?", "aide"));
+		super(HELP, plugin);
+		this.setAliases(Lists.newArrayList(HELP, "h", "?", "aide"));
 		this.addArgument(new CommandArgument<Integer>("page", ArgTypeInteger.get(), 1, true, true, "Page number"));
 	}
 
@@ -58,9 +61,9 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		class data
 		{
 			public CommandInfo commandInfo;
-			public com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp message;
+			public Help message;
 
-			public data(CommandInfo commandInfo, com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp message)
+			public data(CommandInfo commandInfo, Help message)
 			{
 				this.commandInfo = commandInfo;
 				this.message = message;
@@ -72,11 +75,11 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		int maxLines = commandInfo.getPlayer()!=null ? 10 : 100;
 
 		// Main command
-		PluginCommand<?> mainCommand = commandInfo.getCommand().getMainCommand();
+		PluginCommand<?> mainCommand = commandInfo.getCommand().getName().toLowerCase().equals(HELP.toLowerCase()) ? commandInfo.getCommand().getParentCommand() : commandInfo.getCommand();
 		if(mainCommand.getMaxArgs() > 0)
 		{
 			CommandInfo mainCommandInfo = new CommandInfo(commandInfo.getSender(), mainCommand, mainCommand.getName(), new String[0], null);
-			com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp mainHelp = new com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp(null, mainCommandInfo);
+			Help mainHelp = new Help(mainCommandInfo);
 
 			if(mainCommandInfo.getCommand().getPermission()==null)
 				datas.add(new data(mainCommandInfo, mainHelp));
@@ -90,7 +93,7 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 			PluginCommand<?> subCommand = entry.getValue();
 
 			CommandInfo subCommandInfo = new CommandInfo(commandInfo.getSender(), subCommand, subCommand.getName(), new String[0], null);
-			com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp subHelp = new com.github.hexosse.pluginframework.pluginapi.message.predifined.CommandHelp(null, subCommandInfo);
+			Help subHelp = new Help(subCommandInfo);
 
 			if(subCommandInfo.getCommand().getPermission()==null)
 				datas.add(new data(subCommandInfo, subHelp));
