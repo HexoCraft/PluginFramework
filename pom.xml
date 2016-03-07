@@ -45,6 +45,10 @@
         <developerConnection>scm:git:git@github.com:hexosse/PluginFramework.git</developerConnection>
         <url>https://github.com/hexosse/PluginFramework</url>
     </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/hexosse/PluginFramework/issues</url>
+    </issueManagement>
 
 
     <!-- Propriétés du projet -->
