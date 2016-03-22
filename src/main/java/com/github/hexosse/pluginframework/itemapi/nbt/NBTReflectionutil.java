@@ -53,11 +53,11 @@ public final class NBTReflectionutil
     }
 
     @SuppressWarnings({ "unchecked" })
-    private static ItemStack asBukkitCopy(Object itemStack)
+    private static ItemStack asCraftMirror(Object itemStack)
     {
         java.lang.reflect.Method method;
         try {
-            method = getMethod(CraftItemStack,"asBukkitCopy", itemStack.getClass());
+            method = getMethod(CraftItemStack,"asCraftMirror", itemStack.getClass());
             Object answer = method.invoke(CraftItemStack, itemStack);
             return (ItemStack) answer;
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public final class NBTReflectionutil
             Method method = getMethod(nbtTag.getClass(),"set", String.class, NBTBase);
             method.invoke(nbtTag, Tag, newNBTTagList());
             nmsItemStack = setTag(nbtTag, nmsItemStack);
-            return asBukkitCopy(nmsItemStack);
+            return asCraftMirror(nmsItemStack);
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -160,7 +160,7 @@ public final class NBTReflectionutil
             Method method = getMethod(nbtTag.getClass(),"setString", String.class, String.class);
             method.invoke(nbtTag, key, Text);
             nmsItemStack = setTag(nbtTag, nmsItemStack);
-            return asBukkitCopy(nmsItemStack);
+            return asCraftMirror(nmsItemStack);
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -202,7 +202,7 @@ public final class NBTReflectionutil
             Method method = getMethod(nbtTag.getClass(),"setInt", String.class, int.class);
             method.invoke(nbtTag, key, i);
             nmsItemStack = setTag(nbtTag, nmsItemStack);
-            return asBukkitCopy(nmsItemStack);
+            return asCraftMirror(nmsItemStack);
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -244,7 +244,7 @@ public final class NBTReflectionutil
             Method method = getMethod(nbtTag.getClass(),"setDouble", String.class, double.class);
             method.invoke(nbtTag, key, d);
             nmsItemStack = setTag(nbtTag, nmsItemStack);
-            return asBukkitCopy(nmsItemStack);
+            return asCraftMirror(nmsItemStack);
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -286,7 +286,7 @@ public final class NBTReflectionutil
             Method method = getMethod(nbtTag.getClass(),"setBoolean", String.class, boolean.class);
             method.invoke(nbtTag, key, d);
             nmsItemStack = setTag(nbtTag, nmsItemStack);
-            return asBukkitCopy(nmsItemStack);
+            return asCraftMirror(nmsItemStack);
         }catch(Exception ex){
             ex.printStackTrace();
         }
