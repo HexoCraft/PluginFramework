@@ -83,7 +83,7 @@ public class PlayerUtil
             Location location = player.getLocation();
             player.getWorld().dropItem(location, leftOver.get(0));
             for(int i=0; i<leftOver.size(); i++)
-                location.getWorld().playSound(location, Sound.ITEM_PICKUP, 1.0f, 1.0f);
+                location.getWorld().playSound(location, Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.0f);
         }
     }
 
