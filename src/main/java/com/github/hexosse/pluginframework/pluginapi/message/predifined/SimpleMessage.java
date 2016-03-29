@@ -37,9 +37,7 @@ public class SimpleMessage
 
     public static void help(CommandSender target, String message)
     {
-        Message m = new Message(MessageSeverity.INFO);
-        m.add(message);
-        target.sendMessage(m.getLines().get(0).toString());
+        target.sendMessage(MessageSeverity.INFO.color() +  message);
     }
     public static void help(String message, CommandSender target) {
         help(target, message);
@@ -47,9 +45,7 @@ public class SimpleMessage
 
     public static void info(CommandSender target, String message)
     {
-        Message m = new Message(MessageSeverity.INFO);
-        m.add(message);
-        target.sendMessage(m.getLines().get(0).toString());
+        target.sendMessage(MessageSeverity.INFO.color() +  message);
     }
     public static void info(String message, CommandSender target) {
         info(target, message);
@@ -57,9 +53,7 @@ public class SimpleMessage
 
     public static void warn(CommandSender target, String message)
     {
-        Message m = new Message(MessageSeverity.WARNING);
-        m.add(message);
-        target.sendMessage(m.getLines().get(0).toString());
+        target.sendMessage(MessageSeverity.WARNING.color() +  message);
     }
     public static void warn(String message, CommandSender target) {
         warn(target, message);
@@ -67,16 +61,12 @@ public class SimpleMessage
 
     public static void warnPermission(CommandSender target)
     {
-        Message m = new Message(MessageSeverity.ERROR);
-        m.add(MessageText.commmand_no_permission);
-        target.sendMessage(m.getLines().get(0).toString());
+        target.sendMessage(MessageSeverity.ERROR.color() +  MessageText.commmand_no_permission);
     }
 
     public static void severe(CommandSender target, String message)
     {
-        Message m = new Message(MessageSeverity.ERROR);
-        m.add(message);
-        target.sendMessage(m.getLines().get(0).toString());
+        target.sendMessage(MessageSeverity.ERROR.color() +  message);
     }
     public static void severe(String message, CommandSender target) {
         severe(target, message);

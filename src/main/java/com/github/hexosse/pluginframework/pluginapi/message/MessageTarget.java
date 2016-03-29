@@ -44,9 +44,10 @@ public class MessageTarget
         this.targets = Lists.newArrayList(commandSender);
     }
 
-    public void add(CommandSender commandSender) {
+    public MessageTarget add(CommandSender commandSender) {
 		if(commandSender!=null)
 			this.targets.add(commandSender);
+        return this;
     }
 
     public List<CommandSender> getTargets() {

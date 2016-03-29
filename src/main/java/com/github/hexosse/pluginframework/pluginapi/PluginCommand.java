@@ -36,6 +36,8 @@ import org.bukkit.command.*;
 
 import java.util.*;
 
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
+
 /**
  * This file is part of HexocubeItems
  */
@@ -79,7 +81,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 
 
 	/**
-	 * List of sub commands
+	 * The parent command
 	 */
 	private PluginCommand<?> parentCommand;
 
@@ -360,8 +362,12 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 	 */
 	public void onPermissionRefused(CommandSender sender)
 	{
-		if(this.getPermissionMessage().isEmpty()==false)
-			SimpleMessage.severe(sender, this.getPermissionMessage());
+		if(this.getPermissionMessage()!=null && this.getPermissionMessage().isEmpty()==false)
+		{
+			for (String line : this.getPermissionMessage().replace("<permission>", this.getPermission()).split("\n")) {
+				SimpleMessage.severe(sender, line);
+			}
+		}
 		else
 			SimpleMessage.warnPermission(sender);
 	}
