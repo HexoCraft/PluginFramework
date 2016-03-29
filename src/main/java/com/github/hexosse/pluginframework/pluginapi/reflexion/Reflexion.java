@@ -120,29 +120,29 @@ public class Reflexion
         throw new NoSuchMethodException(clazz.getName() + "." + name);
     }
 
-    /**
-     * @param clazz Class that should contain the method
-     * @param fieldName the name of the method
-     *
-     * @return the {@code Method} object that matches the specified
-     * {@code clazz} and {@code name} and {@code parameterTypes}
-     */
-    public static Field getField(Class<?> clazz, String fieldName)
-    {
-        try {
-            return getDeclaredFieldWithExecption(clazz, fieldName);
-        }
-        catch(Exception e) {
-            try {
-                return getFieldWithExecption(clazz, fieldName);
-            }
-            catch(Exception e2) {
-                e2.printStackTrace();
-            }
-            e.printStackTrace();
-        }
-        return null;
-    }
+	/**
+	 * @param clazz Class that should contain the method
+	 * @param fieldName the name of the method
+	 *
+	 * @return the {@code Method} object that matches the specified
+	 * {@code clazz} and {@code name} and {@code parameterTypes}
+	 */
+	public static Field getField(Class<?> clazz, String fieldName)
+	{
+		try {
+			return getDeclaredFieldWithExecption(clazz, fieldName);
+		}
+		catch(Exception e) {
+			try {
+				return getFieldWithExecption(clazz, fieldName);
+			}
+			catch(Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return null;
+	}
 
     /**
      * @param clazz Class that should contain the field
@@ -185,6 +185,30 @@ public class Reflexion
 
         throw new NoSuchMethodException(clazz.getName() + "." + fieldName);
     }
+
+	/**
+	 * @param clazz Class that should contain the method
+	 * @param fieldName the name of the method
+	 *
+	 * @return the {@code Method} object that matches the specified
+	 * {@code clazz} and {@code name} and {@code parameterTypes}
+	 */
+	public static <T> T getField(Class<?> clazz, String fieldName, Class<T> fieldType, Object from)
+	{
+		// check the whole class tree
+		do {
+			try
+			{
+				// get the field of this value
+				Field field=getField(clazz, fieldName);
+				if(field!=null)
+					return (T)field.get(from);
+			} catch(IllegalAccessException ignored) {}
+		} while (clazz.getSuperclass()!=Object.class && ((clazz = clazz.getSuperclass())!=null));
+
+		// in case of failure
+		return null;
+	}
 
     /**
      * Returns a field value from any class.
