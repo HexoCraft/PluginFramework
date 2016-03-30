@@ -127,6 +127,16 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 		}
 	}
 
+	public ConfigKey getKey(ConfigKey<?> configKey)
+	{
+		for(Map.Entry<Field,ConfigKey> entry : this.configKeys.entrySet())
+		{
+			if(entry.getValue().getKey().equals(configKey.getKey()))
+				return entry.getValue();
+		}
+		return null;
+	}
+
 	/**
 	 * Create config file frome template
 	 * @throws IOException File exeption
