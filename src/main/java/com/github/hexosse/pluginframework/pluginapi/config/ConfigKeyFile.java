@@ -127,11 +127,11 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 		}
 	}
 
-	public ConfigKey getKey(ConfigKey<?> configKey)
+	public ConfigKey getKey(String key)
 	{
 		for(Map.Entry<Field,ConfigKey> entry : this.configKeys.entrySet())
 		{
-			if(entry.getValue().getKey().equals(configKey.getKey()))
+			if(entry.getValue().getKey().equals(key))
 				return entry.getValue();
 		}
 		return null;
