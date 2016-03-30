@@ -16,13 +16,13 @@ package com.github.hexosse.pluginframework.pluginapi.config.Location;
  * limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.config.PluginConfig;
+import com.github.hexosse.pluginframework.pluginapi.config.ConfigFile;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
 
 /**
- * The LocationList can be used within {@link PluginConfig} to store location in file
+ * The LocationList can be used within {@link ConfigFile} to store location in file
  *
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  */

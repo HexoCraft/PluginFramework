@@ -202,7 +202,7 @@ public class Reflexion
 				// get the field of this value
 				Field field=getField(clazz, fieldName);
 				if(field!=null)
-					return (T)field.get(from);
+					return fieldType.cast(field.get(from));
 			} catch(IllegalAccessException ignored) {}
 		} while (clazz.getSuperclass()!=Object.class && ((clazz = clazz.getSuperclass())!=null));
 

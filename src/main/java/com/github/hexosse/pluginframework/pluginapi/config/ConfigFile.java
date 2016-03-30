@@ -51,7 +51,7 @@ import java.util.Map;
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  * @version 1.0.0
  */
-public class PluginConfig<PluginClass extends Plugin> extends PluginObject<PluginClass>
+public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
     protected final YamlConfiguration yaml;
     protected final File configFile;
@@ -103,7 +103,7 @@ public class PluginConfig<PluginClass extends Plugin> extends PluginObject<Plugi
     }
 
 
-    public PluginConfig(PluginClass plugin, final File configFile)
+    public ConfigFile(PluginClass plugin, final File configFile)
     {
         super(plugin);
         yaml = new YamlConfiguration();
@@ -111,7 +111,7 @@ public class PluginConfig<PluginClass extends Plugin> extends PluginObject<Plugi
         this.templateName = null;
     }
 
-    public PluginConfig(PluginClass plugin, final File configFile, final String templateName)
+    public ConfigFile(PluginClass plugin, final File configFile, final String templateName)
     {
         super(plugin);
         yaml = new YamlConfiguration();
