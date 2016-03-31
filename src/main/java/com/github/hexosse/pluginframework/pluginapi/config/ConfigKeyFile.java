@@ -66,22 +66,25 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 		this.templateName = templateName;
 
 		extractConfigData();
+		load();
 	}
 
 	public boolean load()
 	{
 		try
 		{
+			boolean configFileExist = configFile.exists();
+
 			// Make sure plugin folder exist
 			if(!configFile.getParentFile().exists())
 				configFile.getParentFile().mkdirs();
 
 			// Create config file from template
-			if(!configFile.exists() && templateName!=null)
+			if(!configFileExist && templateName!=null)
 				createFromTemplate();
 
 			// Create new config file
-			if(!configFile.exists())
+			if(!configFileExist)
 				configFile.createNewFile();
 
 			// Loading file
@@ -95,7 +98,8 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 				loadKey(entry.getKey(), entry.getValue());
 
 			// Save config to file
-			save();
+			if(!configFileExist)
+				save();
 
 			return true;
 		}
