@@ -84,41 +84,64 @@ public class Reflexion
      */
     public static Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes)
     {
-        try {
-            return getMethodWithExecption(clazz, name, parameterTypes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+		try {
+			return getDeclaredMethodWithExecption(clazz, name, parameterTypes);
+		}
+		catch(Exception e) {
+			try {
+				return getMethodWithExecption(clazz, name, parameterTypes);
+			}
+			catch(Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return null;
     }
 
-    /**
-     * @param clazz Class that should contain the method
-     * @param name the name of the method
-     * @param parameterTypes the list of parameters
-     *
-     * @return the {@code Method} object that matches the specified
-     * {@code clazz} and {@code name} and {@code parameterTypes}
-     *
-     * @exception NoSuchMethodException if a matching method is not found
-     *            or if the name is "&lt;init&gt;"or "&lt;clinit&gt;".
-     */
-    public static Method getMethodWithExecption(Class<?> clazz, String name, Class<?>... parameterTypes) throws Exception
-    {
-        Method method = clazz.getMethod(name, parameterTypes);
-        if(method!=null) {
-            method.setAccessible(true);
-            return method;
-        }
+	/**
+	 * @param clazz Class that should contain the method
+	 * @param name the name of the method
+	 * @param parameterTypes the list of parameters
+	 *
+	 * @return the {@code Method} object that matches the specified
+	 * {@code clazz} and {@code name} and {@code parameterTypes}
+	 *
+	 * @exception NoSuchMethodException if a matching method is not found
+	 *            or if the name is "&lt;init&gt;"or "&lt;clinit&gt;".
+	 */
+	public static Method getMethodWithExecption(Class<?> clazz, String name, Class<?>... parameterTypes) throws Exception
+	{
+		Method method = clazz.getMethod(name, parameterTypes);
+		if(method!=null) {
+			method.setAccessible(true);
+			return method;
+		}
 
-        Method declaredMethod = clazz.getDeclaredMethod(name, parameterTypes);
-        if(declaredMethod!=null) {
-            declaredMethod.setAccessible(true);
-            return declaredMethod;
-        }
+		throw new NoSuchMethodException(clazz.getName() + "." + name);
+	}
 
-        throw new NoSuchMethodException(clazz.getName() + "." + name);
-    }
+	/**
+	 * @param clazz Class that should contain the method
+	 * @param name the name of the method
+	 * @param parameterTypes the list of parameters
+	 *
+	 * @return the {@code Method} object that matches the specified
+	 * {@code clazz} and {@code name} and {@code parameterTypes}
+	 *
+	 * @exception NoSuchMethodException if a matching method is not found
+	 *            or if the name is "&lt;init&gt;"or "&lt;clinit&gt;".
+	 */
+	public static Method getDeclaredMethodWithExecption(Class<?> clazz, String name, Class<?>... parameterTypes) throws Exception
+	{
+		Method declaredMethod = clazz.getDeclaredMethod(name, parameterTypes);
+		if(declaredMethod!=null) {
+			declaredMethod.setAccessible(true);
+			return declaredMethod;
+		}
+
+		throw new NoSuchMethodException(clazz.getName() + "." + name);
+	}
 
 	/**
 	 * @param clazz Class that should contain the method

@@ -127,7 +127,7 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 		}
 	}
 
-	public ConfigKey getKey(String key)
+	public ConfigKey<?> getKey(String key)
 	{
 		for(Map.Entry<Field,ConfigKey> entry : this.configKeys.entrySet())
 		{
@@ -206,6 +206,9 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 	{
 		String line;
 		String trimeLine;
+
+		// Clear map
+		this.comments.clear();
 
 		// Read config file and store each line in an array of string
 		ArrayList<String> buffer = new ArrayList<String>();

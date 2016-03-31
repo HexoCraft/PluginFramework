@@ -22,11 +22,11 @@ import org.bukkit.World;
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class ArtTypeWorld implements ArgType<World>
+public class ArgTypeWorld implements ArgType<World>
 {
-	private ArtTypeWorld() {};
-	private static ArtTypeWorld i = new ArtTypeWorld();
-	public static ArtTypeWorld get() { return i; }
+	private ArgTypeWorld() {};
+	private static ArgTypeWorld i = new ArgTypeWorld();
+	public static ArgTypeWorld get() { return i; }
 
 	@Override
 	public boolean check(String world)
