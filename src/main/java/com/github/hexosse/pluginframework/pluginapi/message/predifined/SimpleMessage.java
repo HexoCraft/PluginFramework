@@ -16,7 +16,6 @@ package com.github.hexosse.pluginframework.pluginapi.message.predifined;
  * limitations under the License.
  */
 
-import com.github.hexosse.pluginframework.pluginapi.message.Message;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageSeverity;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageText;
 import org.bukkit.command.CommandSender;
