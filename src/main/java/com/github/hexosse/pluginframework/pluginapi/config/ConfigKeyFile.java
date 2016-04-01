@@ -64,9 +64,6 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 		yaml = new YamlConfiguration();
 		this.configFile = configFile.getAbsoluteFile();
 		this.templateName = templateName;
-
-		extractConfigData();
-		load();
 	}
 
 	public boolean load()
@@ -94,6 +91,7 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 			loadComments();
 
 			// Load and update config values
+			extractConfigKeys();
 			for(Map.Entry<Field,ConfigKey> entry : this.configKeys.entrySet())
 				loadKey(entry.getKey(), entry.getValue());
 
@@ -159,8 +157,10 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 		Files.write(buffer, this.configFile);
 	}
 
-	private void extractConfigData()
+	private void extractConfigKeys()
 	{
+		this.configKeys.clear();
+
 		for(Field field : this.getClass().getDeclaredFields())
 		{
 			if(field.getType().equals(ConfigKey.class))
@@ -169,7 +169,7 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 
 				try {
 					Reflexion.setAccessible(field);
-					ConfigKey key = (ConfigKey) field.get(null);
+					ConfigKey key = (ConfigKey) field.get(this);
 					if(comment!=null) key.setComment(comment.value());
 					this.configKeys.put(field,key);
 				} catch(Exception e) {
@@ -190,7 +190,7 @@ public class ConfigKeyFile<PluginClass extends Plugin> extends PluginObject<Plug
 			return;
 		}
 
-		// Update value
+		// Update key
 		configKey.setValue(deserializeObject(configKey.getValue().getClass(), configValue));
 
 		// Update comment
