@@ -21,11 +21,9 @@ import com.github.hexosse.pluginframework.pluginapi.message.MessageManager;
 import com.github.hexosse.pluginframework.pluginapi.reflexion.Reflexion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -85,56 +83,70 @@ public abstract class Plugin extends JavaPlugin
         if(!this.isEnabled())
             throw new IllegalPluginAccessException("Plugin attempted to register " + command + " while not enabled");
 
-        if(isRegisteredCommand(command))
-			unRegisterCommand(command);
-        getCommandMap().register(this.getDescription().getName(),command);
-    }
+		try
+		{
+			if(isRegisteredCommand(command))
+				unRegisterCommand(command);
+			getCommandMap().register(this.getDescription().getName(),command);
+		}
+		catch(NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    private CommandMap getCommandMap()
-    {
+    private CommandMap getCommandMap() throws NoSuchFieldException
+	{
         // return default command map
         if(this.commandMap!=null) return this.commandMap;
 
-        // read command map
-        CommandMap commandMap = Reflexion.getField(this.getServer().getPluginManager(), "commandMap");
+		// read command map
+		CommandMap commandMap = Reflexion.getField(this.getServer().getPluginManager(), "commandMap");
+		// cache command map
+		if(commandMap != null) return (this.commandMap = commandMap);
 
-        // cache command map
-        if(commandMap!=null) return (this.commandMap = commandMap);
-
-        return null;
+		return null;
     }
 
-    private Map<String, Command> getKnownCommands()
-    {
+    private Map<String, Command> getKnownCommands() throws NoSuchFieldException
+	{
         // return default command map
         if(this.knownCommands!=null) return this.knownCommands;
 
-        // read command map
-        Map<String, Command> knownCommands = Reflexion.getField(getCommandMap(), "knownCommands");
-
-        // cache command map
-        if(knownCommands!=null) return (this.knownCommands = knownCommands);
+		// read command map
+		Map<String,Command> knownCommands = Reflexion.getField(getCommandMap(), "knownCommands");
+		// cache command map
+		if(knownCommands != null) return (this.knownCommands = knownCommands);
 
         return null;
     }
 
 	private boolean isRegisteredCommand(Command command)
 	{
-		Map<String,Command> knownCommands = getKnownCommands();
+		try
+		{
+			Map<String,Command> knownCommands = getKnownCommands();
+			return knownCommands.get(command.getName().toLowerCase().trim()) != null;
+		}
+		catch(NoSuchFieldException ignored){}
 
-		return knownCommands.get(command.getName().toLowerCase().trim()) != null;
+		return false;
 	}
 
 	private void unRegisterCommand(Command command)
 	{
-		Map<String,Command> knownCommands = getKnownCommands();
-
-		knownCommands.remove(command.getName().toLowerCase().trim());
-		for(String alias : command.getAliases())
+		Map<String,Command> knownCommands = null;
+		try
 		{
-			alias = alias.toLowerCase().trim();
-			if(knownCommands.containsKey(alias) && knownCommands.get(alias).toString().contains(this.getName()))
-				knownCommands.remove(alias);
+			knownCommands = getKnownCommands();
+			knownCommands.remove(command.getName().toLowerCase().trim());
+			for(String alias : command.getAliases())
+			{
+				alias = alias.toLowerCase().trim();
+				if(knownCommands.containsKey(alias) && knownCommands.get(alias).toString().contains(this.getName()))
+					knownCommands.remove(alias);
+			}
 		}
+		catch(NoSuchFieldException ignored){}
 	}
 }
