@@ -16,14 +16,18 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  * limitations under the License.
  */
 
+import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
+
+import java.util.List;
+
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
 public class ArgTypeDouble implements ArgType<Double>
 {
 	private ArgTypeDouble() {};
-	private static ArgTypeDouble i = new ArgTypeDouble();
-	public static ArgTypeDouble get() { return i; }
+	private static ArgTypeDouble t = new ArgTypeDouble();
+	public static ArgTypeDouble get() { return t; }
 
 	@Override
 	public boolean check(String dbl)
@@ -42,5 +46,11 @@ public class ArgTypeDouble implements ArgType<Double>
 		{
 			return null;
 		}
+	}
+
+	@Override
+	public List<String> tabComplete(CommandInfo commandInfo)
+	{
+		return null;
 	}
 }

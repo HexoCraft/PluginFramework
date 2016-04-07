@@ -16,14 +16,18 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  * limitations under the License.
  */
 
+import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
+
+import java.util.List;
+
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
 public class ArgTypeInteger implements ArgType<Integer>
 {
 	private ArgTypeInteger() {};
-	private static ArgTypeInteger i = new ArgTypeInteger();
-	public static ArgTypeInteger get() { return i; }
+	private static ArgTypeInteger t = new ArgTypeInteger();
+	public static ArgTypeInteger get() { return t; }
 
 	@Override
 	public boolean check(String integer)
@@ -42,5 +46,11 @@ public class ArgTypeInteger implements ArgType<Integer>
 		{
 			return null;
 		}
+	}
+
+	@Override
+	public List<String> tabComplete(CommandInfo commandInfo)
+	{
+		return null;
 	}
 }

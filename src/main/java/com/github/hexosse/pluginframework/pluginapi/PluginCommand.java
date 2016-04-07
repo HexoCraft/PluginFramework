@@ -336,6 +336,9 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 				String commandName = entry.getKey();
 				completions.add(commandName);
 			}
+
+			if(this.arguments.size()>0)
+				completions = this.arguments.get(0).getType().tabComplete(commandInfo);
 		}
 		else
 		{
@@ -347,7 +350,13 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 					completions.add(commandName);
 				}
 			}
+
+			if(this.arguments.size()>=commandInfo.numArgs())
+				completions= this.arguments.get(commandInfo.numArgs() - 1).getType().tabComplete(commandInfo);
 		}
+
+		if(completions.size() > 0)
+			Collections.sort(completions, String.CASE_INSENSITIVE_ORDER);
 
 		return completions.size() > 0 ? completions : null;
 	}

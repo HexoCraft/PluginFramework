@@ -16,12 +16,21 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  * limitations under the License.
  */
 
+import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
+
+import java.util.List;
+
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
 public interface ArgType<Type>
 {
+	// Check if the value is valid
 	public boolean check(String value);
 
+	// Get type from value
 	public Type get(String value);
+
+	// Used for auto completion
+	public List<String> tabComplete(CommandInfo commandInfo);
 }

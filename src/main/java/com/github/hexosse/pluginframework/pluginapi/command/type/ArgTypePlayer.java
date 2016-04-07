@@ -16,8 +16,14 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  * limitations under the License.
  */
 
+import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
@@ -25,8 +31,8 @@ import org.bukkit.entity.Player;
 public class ArgTypePlayer implements ArgType<Player>
 {
 	private ArgTypePlayer() {};
-	private static ArgTypePlayer i = new ArgTypePlayer();
-	public static ArgTypePlayer get() { return i; }
+	private static ArgTypePlayer t = new ArgTypePlayer();
+	public static ArgTypePlayer get() { return t; }
 
 	@Override
 	public boolean check(String playerName)
@@ -45,5 +51,27 @@ public class ArgTypePlayer implements ArgType<Player>
 		{
 			return null;
 		}
+	}
+
+	@Override
+	public List<String> tabComplete(CommandInfo commandInfo)
+	{
+		if (commandInfo.numArgs() == 0) {
+			return ImmutableList.of();
+		}
+
+		String lastWord = commandInfo.getArgs().get(commandInfo.numArgs()-1);
+
+		ArrayList<String> matchedPlayers = new ArrayList<String>();
+		for(Player player : commandInfo.getSender().getServer().getOnlinePlayers())
+		{
+			String name = player.getName();
+			if((commandInfo.getPlayer() == null || commandInfo.getPlayer().canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord))
+			{
+				matchedPlayers.add(name);
+			}
+		}
+
+		return matchedPlayers;
 	}
 }

@@ -16,8 +16,14 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  * limitations under the License.
  */
 
+import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
@@ -25,8 +31,8 @@ import org.bukkit.World;
 public class ArgTypeWorld implements ArgType<World>
 {
 	private ArgTypeWorld() {};
-	private static ArgTypeWorld i = new ArgTypeWorld();
-	public static ArgTypeWorld get() { return i; }
+	private static ArgTypeWorld t = new ArgTypeWorld();
+	public static ArgTypeWorld get() { return t; }
 
 	@Override
 	public boolean check(String world)
@@ -45,5 +51,25 @@ public class ArgTypeWorld implements ArgType<World>
 		{
 			return null;
 		}
+	}
+
+	@Override
+	public List<String> tabComplete(CommandInfo commandInfo)
+	{
+		if (commandInfo.numArgs() == 0) {
+			return ImmutableList.of();
+		}
+
+		String lastWord = commandInfo.getArgs().get(commandInfo.numArgs()-1);
+
+		ArrayList<String> matchedWorlds = new ArrayList<String>();
+		for(World world : commandInfo.getSender().getServer().getWorlds())
+		{
+			String name = world.getName();
+			if(StringUtil.startsWithIgnoreCase(name, lastWord))
+				matchedWorlds.add(name);
+		}
+
+		return matchedWorlds;
 	}
 }
