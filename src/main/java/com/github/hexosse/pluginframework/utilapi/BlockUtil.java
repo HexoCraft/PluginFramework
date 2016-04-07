@@ -140,7 +140,7 @@ public class BlockUtil
         if (b1 == null) throw new NullPointerException("block b1");
         if (b2 == null) throw new NullPointerException("block b2");
 
-        return ( getMaterial(b1)==getMaterial(b2) && getDurability(b1)==getDurability(b2) );
+        return ( getMaterial(b1).equals(getMaterial(b2))==true && getDurability(b1)==getDurability(b2) );
     }
 
     /**
