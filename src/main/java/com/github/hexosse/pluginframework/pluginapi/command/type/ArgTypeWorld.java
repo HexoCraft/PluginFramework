@@ -56,11 +56,7 @@ public class ArgTypeWorld implements ArgType<World>
 	@Override
 	public List<String> tabComplete(CommandInfo commandInfo)
 	{
-		if (commandInfo.numArgs() == 0) {
-			return ImmutableList.of();
-		}
-
-		String lastWord = commandInfo.getArgs().get(commandInfo.numArgs()-1);
+		String lastWord = commandInfo.numArgs() == 0 ? "" : commandInfo.getArgs().get(commandInfo.numArgs()-1);
 
 		ArrayList<String> matchedWorlds = new ArrayList<String>();
 		for(World world : commandInfo.getSender().getServer().getWorlds())

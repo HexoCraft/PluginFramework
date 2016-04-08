@@ -56,20 +56,14 @@ public class ArgTypePlayer implements ArgType<Player>
 	@Override
 	public List<String> tabComplete(CommandInfo commandInfo)
 	{
-		if (commandInfo.numArgs() == 0) {
-			return ImmutableList.of();
-		}
-
-		String lastWord = commandInfo.getArgs().get(commandInfo.numArgs()-1);
+		String lastWord = commandInfo.numArgs() == 0 ? "" : commandInfo.getArgs().get(commandInfo.numArgs()-1);
 
 		ArrayList<String> matchedPlayers = new ArrayList<String>();
 		for(Player player : commandInfo.getSender().getServer().getOnlinePlayers())
 		{
 			String name = player.getName();
 			if((commandInfo.getPlayer() == null || commandInfo.getPlayer().canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord))
-			{
 				matchedPlayers.add(name);
-			}
 		}
 
 		return matchedPlayers;

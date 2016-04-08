@@ -642,10 +642,6 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 			throw new CommandException(message.toString(), ex);
 		}
 
-		if(completions == null)
-		{
-			return super.tabComplete(sender, alias, args);
-		}
 		return completions;
 	}
 }
