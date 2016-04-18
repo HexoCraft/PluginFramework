@@ -40,18 +40,38 @@ public class PluginLogger<PluginClass extends Plugin> extends PluginObject<Plugi
 
 
     public void help(String msg) { this.log(Level.INFO, msg); }
+    public void help(String msg, Object param1) { this.log(Level.INFO, msg, param1); }
+    public void help(String msg, Object params[]) { this.log(Level.INFO, msg, params); }
 
     public void info(String msg) { this.log(Level.INFO, msg); }
+    public void info(String msg, Object param1) { this.log(Level.INFO, msg, param1); }
+    public void info(String msg, Object params[]) { this.log(Level.INFO, msg, params); }
 
     public void warn(String msg) { this.log(Level.WARNING, msg); }
+    public void warn(String msg, Object param1) { this.log(Level.WARNING, msg, param1); }
+    public void warn(String msg, Object params[]) { this.log(Level.WARNING, msg, params); }
 
     public void severe(String msg) {
         this.log(Level.SEVERE, msg);
+    }
+    public void severe(String msg, Object param1) {
+        this.log(Level.SEVERE, msg, param1);
+    }
+    public void severe(String msg, Object params[]) {
+        this.log(Level.SEVERE, msg, params);
     }
 
     public void log(Level level, String msg)
     {
         this.logger.log(level, msg);
+    }
+    public void log(Level level, String msg, Object param1)
+    {
+        this.logger.log(level, msg, param1);
+    }
+    public void log(Level level, String msg, Object params[])
+    {
+        this.logger.log(level, msg, params);
     }
 }
 
