@@ -55,6 +55,11 @@ public class MessageLine
 		return this;
 	}
 
+	public MessageLine add(String part)
+	{
+		return add(new MessagePart(part));
+	}
+
 	public List<MessagePart> getParts()
 	{
 		return this.parts;
