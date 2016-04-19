@@ -355,10 +355,10 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 				completions= this.arguments.get(commandInfo.numArgs() - 1).getType().tabComplete(commandInfo);
 		}
 
-		if(completions.size() > 0)
+		if(completions != null && completions.size() > 0)
 			Collections.sort(completions, String.CASE_INSENSITIVE_ORDER);
 
-		return completions.size() > 0 ? completions : null;
+		return completions;
 	}
 
 	/**
