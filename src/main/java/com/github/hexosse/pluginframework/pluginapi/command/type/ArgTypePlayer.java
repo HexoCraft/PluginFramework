@@ -17,7 +17,6 @@ package com.github.hexosse.pluginframework.pluginapi.command.type;
  */
 
 import com.github.hexosse.pluginframework.pluginapi.command.CommandInfo;
-import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
