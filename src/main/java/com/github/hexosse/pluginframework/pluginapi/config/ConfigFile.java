@@ -243,7 +243,7 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
         if(doSkipField(field)) return;
 
         final ConfigComment configComment = field.getAnnotation(ConfigComment.class);
-        if(configComment!=null && pathComments.containsKey(configComment.path())==false && configComment.comment().length>1)
+        if(configComment!=null && configComment.path().isEmpty()==false && pathComments.containsKey(configComment.path())==false && configComment.comment().length>=0 && configComment.comment()[0].isEmpty()==false)
             pathComments.put(configComment.path(), configComment.comment());
 
         final ConfigOptions configOption = field.getAnnotation(ConfigOptions.class);
@@ -260,7 +260,7 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             field.set(this, deserializeObject(field.getType(), configValue));
 
         // Commentaires
-        if(configOption!=null && pathComments.containsKey(configOption.path())==false && configOption.comment().length>1)
+		if(configOption!=null && configOption.path().isEmpty()==false && pathComments.containsKey(configOption.path())==false && configOption.comment().length>=0 && configOption.comment()[0].isEmpty()==false)
             pathComments.put(configOption.path(),configOption.comment());
     }
 
