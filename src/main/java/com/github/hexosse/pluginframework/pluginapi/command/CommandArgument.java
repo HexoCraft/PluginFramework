@@ -17,6 +17,7 @@ package com.github.hexosse.pluginframework.pluginapi.command;
  */
 
 import com.github.hexosse.pluginframework.pluginapi.command.type.ArgType;
+import com.github.hexosse.pluginframework.pluginapi.command.type.ArgTypeStringList;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageColor;
 import com.github.hexosse.pluginframework.pluginapi.message.MessagePart;
 import com.github.hexosse.pluginframework.pluginapi.message.MessageText;
@@ -25,6 +26,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+
+import java.util.Collection;
 
 /**
  * This class describe a command argument
@@ -91,7 +94,7 @@ public class CommandArgument<T>
 	 */
 	public ArgType<T> getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	/**
@@ -154,6 +157,15 @@ public class CommandArgument<T>
 	 * @return true if the argument is optionnal (not mandatory) for the specified sender
 	 */
 	public boolean isOptional(CommandSender sender) { return !this.isMandatory(sender); }
+
+	/**
+	 * @return true if the argument is an instance of {@link Collection}
+	 */
+	public boolean isCollection()
+	{
+		// Only ArgTypeStringList class is supported
+		return this.type instanceof ArgTypeStringList;
+	}
 
 	/**
 	 * @return The description of the argument

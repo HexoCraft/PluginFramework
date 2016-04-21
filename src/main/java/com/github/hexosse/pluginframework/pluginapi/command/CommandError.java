@@ -22,5 +22,6 @@ package com.github.hexosse.pluginframework.pluginapi.command;
 public enum CommandError
 {
 	NOT_ENOUGH_ARGUMENTS,
+	TOO_MANY_ARGUMENTS,
 	MISMATCH_ARGUMENTS
 }

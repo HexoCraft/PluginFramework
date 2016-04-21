@@ -34,6 +34,7 @@ public class MessageText
 	public static String commmand_click_copy_command;
 	public static String commmand_no_permission;
 	public static String commmand_not_enough_parameters;
+	public static String commmand_too_many_parameters;
 	public static String commmand_error;
 	public static String commmand_use_help;
 
@@ -66,6 +67,7 @@ public class MessageText
 		commmand_click_copy_command = "Click to copy the command";
 		commmand_no_permission = "You do not have permission to perform that command !";
 		commmand_not_enough_parameters = "Not enough parameters for the command. You should do use";
+		commmand_too_many_parameters = "Too many parameters for the command. You should do use";
 		commmand_error = "There is an error in your command";
 		commmand_use_help = "Use help for more details";
 
@@ -86,6 +88,7 @@ public class MessageText
 		commmand_click_copy_command = "Click pour copier la commande";
 		commmand_no_permission = "Vous n'avez pas les droits suffisants pour executer cette commande !";
 		commmand_not_enough_parameters = "Pas assez de paramètres pour la commande, Vous devez utiliser";
+		commmand_too_many_parameters = "Trop de paramètres pour la commande, Vous devez utiliser";
 		commmand_error = "Il y a une erreur dans la commande";
 		commmand_use_help = "Utilisez l'aide pour plus de détails";
 

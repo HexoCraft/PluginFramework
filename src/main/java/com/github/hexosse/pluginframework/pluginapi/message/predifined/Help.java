@@ -44,6 +44,11 @@ public class Help extends Message
 			this.add(new MessageLine(new MessagePart("")));
 			this.add(new MessageLine(new MessagePart(MessageText.commmand_not_enough_parameters).color(MessageColor.ERROR)));
 		}
+		else if(error != null && error == CommandError.TOO_MANY_ARGUMENTS)
+		{
+			this.add(new MessageLine(new MessagePart("")));
+			this.add(new MessageLine(new MessagePart(MessageText.commmand_too_many_parameters).color(MessageColor.ERROR)));
+		}
 		else if(error != null && error == CommandError.MISMATCH_ARGUMENTS)
 		{
 			this.add(new MessageLine(new MessagePart("")));

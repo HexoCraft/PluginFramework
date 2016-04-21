@@ -31,6 +31,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.*;
 
@@ -92,6 +93,11 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 	 * List of arguments used for the command
 	 */
 	private final List<CommandArgument<?>> arguments = new ArrayList<CommandArgument<?>>();
+
+	/**
+	 * Indicate that the last argument is an instance of {@link Collection}
+	 */
+	private boolean hasCollection = false;
 
 
 
@@ -211,18 +217,36 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 			&& this.arguments.get(this.arguments.size()-1).isOptional())
 			throw new IllegalArgumentException("You can't add mandatory argument after an optional argument.");
 
+		// Can't add an argument after an argument implement a collection
+		if(	this.arguments.size()>0
+			&& this.arguments.get(this.arguments.size()-1).isCollection())
+			throw new IllegalArgumentException("You can't add argument after a hasCollection.");
+
+		// Add the argument to the list
 		this.arguments.add(argument);
+
+		// Check if this arg is a collection
+		this.hasCollection = argument.isCollection();
+
 		return this;
 	}
 
-
+	/**
+	 * remove an @{link CommandArgument} to the command
+	 *
+	 * @return The command
+	 */
 	public PluginCommand<?> removeArgument(String name)
 	{
 		for(CommandArgument<?> argument : this.arguments)
 		{
 			if(argument.getName().toLowerCase().equals(name.toLowerCase()))
 			{
+				// Remove the argument
 				this.arguments.remove(argument);
+				// Check if it's a collection
+				if(argument.isCollection()) this.hasCollection = false;
+				//
 				return this;
 			}
 		}
@@ -247,7 +271,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 	 */
 	public int getMaxArgs()
 	{
-		return arguments.size();
+		return this.hasCollection ? Integer.MAX_VALUE : arguments.size();
 	}
 
 	public List<CommandArgument<?>> getArguments()
@@ -304,6 +328,11 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 	private String getStringArg(int index, String[] args)
 	{
 		return (args.length>index)?args[index]:null;
+	}
+
+	private String getStringListArg(int index, String[] args)
+	{
+		return StringUtils.join(args," ",index, args.length);
 	}
 
 	/**
@@ -501,9 +530,14 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 
 				// Check that the numbers of arguments correspond
 				// if not, show the help command
-				if(args.length < getMinArgs(sender) || args.length > (getMaxArgs() == -1 ? args.length : getMaxArgs()))
+				if(args.length < getMinArgs(sender))
 				{
 					this.onCommandHelp(CommandError.NOT_ENOUGH_ARGUMENTS, new CommandInfo(sender, this, commandLabel, args, null));
+					return false;
+				}
+				if(args.length > (getMaxArgs() == -1 ? args.length : getMaxArgs()))
+				{
+					this.onCommandHelp(CommandError.TOO_MANY_ARGUMENTS, new CommandInfo(sender, this, commandLabel, args, null));
 					return false;
 				}
 
@@ -518,7 +552,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 				for(CommandArgument<?> argument : this.arguments)
 				{
 					String argName = argument.getName();
-					String value = getStringArg(index, args);
+					String value = argument.isCollection() ? getStringListArg(index, args) : getStringArg(index, args);
 
 					// If mandatory, the argument MUST correspond
 					if(argument.isMandatory(sender))
@@ -559,7 +593,7 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 				}
 
 				// We have reach the ends of possible arguments but some args are still in the queue
-				if(index < args.length)
+				if(index < args.length && this.hasCollection == false)
 				{
 					this.onCommandHelp(CommandError.MISMATCH_ARGUMENTS, new CommandInfo(sender, this, commandLabel, args, null));
 					return false;
