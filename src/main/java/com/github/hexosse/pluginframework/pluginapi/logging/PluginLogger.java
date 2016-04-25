@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 public class PluginLogger<PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
     private Logger logger;
+    private boolean debug = false;
 
 
     public PluginLogger(PluginClass plugin) {
@@ -38,40 +39,21 @@ public class PluginLogger<PluginClass extends Plugin> extends PluginObject<Plugi
         this.logger.setParent(Logger.getLogger("Minecraft"));
     }
 
+    public void setDebugMode(boolean debugMode)
+    {
+        this.debug = debugMode;
+    }
 
-    public void help(String msg) { this.log(Level.INFO, msg); }
-    public void help(String msg, Object param1) { this.log(Level.INFO, msg, param1); }
-    public void help(String msg, Object params[]) { this.log(Level.INFO, msg, params); }
-
-    public void info(String msg) { this.log(Level.INFO, msg); }
-    public void info(String msg, Object param1) { this.log(Level.INFO, msg, param1); }
-    public void info(String msg, Object params[]) { this.log(Level.INFO, msg, params); }
-
-    public void warn(String msg) { this.log(Level.WARNING, msg); }
-    public void warn(String msg, Object param1) { this.log(Level.WARNING, msg, param1); }
-    public void warn(String msg, Object params[]) { this.log(Level.WARNING, msg, params); }
-
-    public void severe(String msg) {
+    public void debug(final String msg) { if (debug) info(msg); }
+    public void help(final String msg) { this.log(Level.INFO, msg); }
+    public void info(final String msg) { this.log(Level.INFO, msg); }
+    public void warn(final String msg) { this.log(Level.WARNING, msg); }
+    public void severe(final String msg) {
         this.log(Level.SEVERE, msg);
     }
-    public void severe(String msg, Object param1) {
-        this.log(Level.SEVERE, msg, param1);
-    }
-    public void severe(String msg, Object params[]) {
-        this.log(Level.SEVERE, msg, params);
-    }
-
-    public void log(Level level, String msg)
+    public void log(Level level, final String msg)
     {
         this.logger.log(level, msg);
-    }
-    public void log(Level level, String msg, Object param1)
-    {
-        this.logger.log(level, msg, param1);
-    }
-    public void log(Level level, String msg, Object params[])
-    {
-        this.logger.log(level, msg, params);
     }
 }
 
