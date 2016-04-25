@@ -68,6 +68,11 @@ public abstract class Plugin extends JavaPlugin
         return messageManager;
     }
 
+	public void debug(final String msg)
+	{
+		if(pluginLogger != null)
+			pluginLogger.debug(msg);
+	}
 
     public void registerEvents(PluginListener listener)
     {
@@ -76,7 +81,6 @@ public abstract class Plugin extends JavaPlugin
         }
         this.getServer().getPluginManager().registerEvents(listener, this);
     }
-
 
     public void registerCommands(Command command)
     {
