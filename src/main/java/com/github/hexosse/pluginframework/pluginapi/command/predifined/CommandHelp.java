@@ -30,9 +30,15 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.util.ChatPaginator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.bukkit.util.ChatPaginator.AVERAGE_CHAT_PAGE_WIDTH;
+import static org.bukkit.util.ChatPaginator.CLOSED_CHAT_PAGE_HEIGHT;
+import static org.bukkit.util.ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH;
 
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
@@ -45,7 +51,7 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 	{
 		super(HELP, plugin);
 		this.setAliases(Lists.newArrayList(HELP, "h", "?", "aide"));
-		this.addArgument(new CommandArgument<Integer>("page", ArgTypeInteger.get(), 1, true, true, "Page number"));
+		this.addArgument(new CommandArgument<Integer>("page", ArgTypeInteger.get(), 1, false, false, "Page number"));
 	}
 
 	/**
@@ -58,33 +64,26 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 	@Override
 	public boolean onCommand(CommandInfo commandInfo)
 	{
-		class data
-		{
-			public CommandInfo commandInfo;
-			public Help message;
+		//List<Data> datas = Lists.newArrayList();
+		HelpLines helpLines = new HelpLines(CLOSED_CHAT_PAGE_HEIGHT-1);
 
-			public data(CommandInfo commandInfo, Help message)
-			{
-				this.commandInfo = commandInfo;
-				this.message = message;
-			}
-		}
+		// Command
+		PluginCommand<?> command = commandInfo.getCommand();
 
-		List<data> datas = Lists.newArrayList();
-		int page = Integer.parseInt(commandInfo.hasNamedArg("page")==true?commandInfo.getNamedArg("page"):"-1");
-		int maxLines = commandInfo.getPlayer()!=null ? 10 : 100;
+		// Parent command
+		PluginCommand<?> parentCommand = command.getParentCommand();
 
 		// Main command
-		PluginCommand<?> mainCommand = commandInfo.getCommand().getName().toLowerCase().equals(HELP.toLowerCase()) ? commandInfo.getCommand().getParentCommand() : commandInfo.getCommand();
+		PluginCommand<?> mainCommand = command.getName().toLowerCase().equals(HELP.toLowerCase()) ? parentCommand : command;
 		if(mainCommand.getMaxArgs() > 0)
 		{
 			CommandInfo mainCommandInfo = new CommandInfo(commandInfo.getSender(), mainCommand, mainCommand.getName(), new String[0], null);
 			Help mainHelp = new Help(mainCommandInfo);
 
-			if(mainCommandInfo.getCommand().getPermission()==null)
-				datas.add(new data(mainCommandInfo, mainHelp));
-			else if(mainCommandInfo.getCommand().getPermission()!=null && mainCommandInfo.getCommand().getPermission().isEmpty()==false && commandInfo.getSender().hasPermission(mainCommandInfo.getCommand().getPermission())==true)
-				datas.add(new data(mainCommandInfo, mainHelp));
+			if(command.getPermission()==null)
+				helpLines.add(new HelpLine(mainCommandInfo, mainHelp));
+			else if(command.getPermission()!=null && command.getPermission().isEmpty()==false && commandInfo.getSender().hasPermission(command.getPermission())==true)
+				helpLines.add(new HelpLine(mainCommandInfo, mainHelp));
 		}
 
 		// Sub command
@@ -95,39 +94,36 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 			CommandInfo subCommandInfo = new CommandInfo(commandInfo.getSender(), subCommand, subCommand.getName(), new String[0], null);
 			Help subHelp = new Help(subCommandInfo);
 
-			if(subCommandInfo.getCommand().getPermission()==null)
-				datas.add(new data(subCommandInfo, subHelp));
+			if(subCommandInfo.getCommand().getPermission()==null || subCommandInfo.getCommand().getPermission().isEmpty()==true)
+				helpLines.add(new HelpLine(subCommandInfo, subHelp));
 			else if(subCommandInfo.getCommand().getPermission().isEmpty()==false && commandInfo.getSender().hasPermission(subCommandInfo.getCommand().getPermission())==true)
-				datas.add(new data(subCommandInfo, subHelp));
+				helpLines.add(new HelpLine(subCommandInfo, subHelp));
 		}
 
-		// Total number of lines
-		int nbLines = datas.size() + 1;
-		int maxPages = (page == -1) ? 1 : (int) Math.ceil((double) nbLines / (double) maxLines);
+		// Page requested
+		int page = Integer.parseInt(commandInfo.hasNamedArg("page")==true?commandInfo.getNamedArg("page"):"1");
+		int maxPages = helpLines.currentPage;
 
 		// Check page number
-		page = (page<=0) ? 1 : ((page>=maxPages) ? maxPages : page);
+		page = ((page>=maxPages) ? maxPages : ((page<=0) ? 1 : page));
 
 		// Title line
-		MessagePart prev = getPrev(mainCommand, page - 1, maxPages);
-		MessagePart help = new MessagePart(" " + MessageText.help_for_command + " \"" + commandInfo.getCommand().getParentCommand().getName() + "\" ").color(MessageColor.DESCRIPTION);
-		MessagePart index = getIndex(mainCommand, page, maxPages);
-		MessagePart next = getNext(mainCommand, page + 1, maxPages);
+		MessagePart prev = getPrev(command, page - 1, maxPages);
+		MessagePart help = new MessagePart(" " + MessageText.help_for_command + " \"" + parentCommand.getName() + "\" ").color(MessageColor.DESCRIPTION);
+		MessagePart index = getIndex(command, page, maxPages);
+		MessagePart next = getNext(command, page + 1, maxPages);
 		int len = (prev.getText() +  help.getText() + index.getText() + next.getText()).length();
-		MessagePart dash = new MessagePart(ChatColor.STRIKETHROUGH + StringUtils.leftPad("", (51-len)/2, "-")).color(MessageColor.DESCRIPTION);
+		MessagePart dash = new MessagePart(ChatColor.STRIKETHROUGH + StringUtils.leftPad("", (GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH-len)/2, "-")).color(MessageColor.DESCRIPTION);
 
 		Message m = new Message(new MessageLine().add(dash).add(prev).add(help).add(index).add(next).add(dash));
 		plugin.messageManager.send(commandInfo,new Message(""));
 		plugin.messageManager.send(commandInfo,m);
 
 		// Help lines
-		for(int i = (page-1)*maxLines; i < (page)*maxLines; i++)
+		for(HelpLine line : helpLines.lines)
 		{
-			if(i<datas.size())
-			{
-				data d = datas.get(i);
-				plugin.messageManager.send(d.commandInfo, d.message);
-			}
+			if(line.page==page)
+				plugin.messageManager.send(line.commandInfo, line.message);
 		}
 
 		return true;
@@ -146,7 +142,13 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		MessagePart prev = new MessagePart(" [<] ");
 
 		// Command
-		String helpCommand = "/" + command.getName() + " help " + Integer.toString(pageNumber);
+		String helpCommand = "";
+		while(command.getParentCommand()!=null)
+		{
+			command = command.getParentCommand();
+			helpCommand = command.getName() + " " + helpCommand;
+		}
+		helpCommand = "/" + helpCommand + " help " + Integer.toString(pageNumber);
 
 		ComponentBuilder prevHoverText = new ComponentBuilder("");
 		prevHoverText.append(MessageText.help_page + " " + Integer.toString(pageNumber)).color(MessageColor.SUBCOMMAND.color());
@@ -164,7 +166,14 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		MessagePart next = new MessagePart(" [>] ");
 
 		// Command
-		String helpCommand = "/" + command.getName() + " help " + Integer.toString(pageNumber);
+		String helpCommand = "";
+		while(command.getParentCommand()!=null)
+		{
+			command = command.getParentCommand();
+			helpCommand = command.getName() + " " + helpCommand;
+		}
+		helpCommand = "/" + helpCommand + " help " + Integer.toString(pageNumber);
+
 
 		ComponentBuilder nextHoverText = new ComponentBuilder("");
 		nextHoverText.append(MessageText.help_page + " " + Integer.toString(pageNumber)).color(MessageColor.SUBCOMMAND.color());
@@ -182,5 +191,61 @@ public class CommandHelp<PluginClass extends Plugin> extends PluginCommand<Plugi
 		MessagePart index = new MessagePart(" (" + Integer.toString(pageNumber) + "/" + Integer.toString(totalPage) + ") ");
 
 		return index.color(MessageColor.DESCRIPTION);
+	}
+
+
+	class HelpLine
+	{
+		public CommandInfo commandInfo;
+		public Help message;
+		public int lines;
+		public int page;
+
+		public HelpLine(CommandInfo commandInfo, Help message)
+		{
+			this.commandInfo = commandInfo;
+			this.message = message;
+			this.lines = getLines(message);
+		}
+
+		private int getLines(Help message)
+		{
+			List<String> lines = new ArrayList<String>();
+			for(MessageLine mLine : message.getLines())
+				lines.add(mLine.toString());
+			return ChatPaginator.paginate(StringUtils.join(lines, ' '), 1, AVERAGE_CHAT_PAGE_WIDTH, CLOSED_CHAT_PAGE_HEIGHT).getLines().length;
+		}
+	}
+
+	class HelpLines
+	{
+		List<HelpLine> lines = new ArrayList<>();
+		int nbLinePerPage;
+		int currentPage;
+		int currentPageLines;
+
+		public HelpLines(int nbLinePerPage)
+		{
+			this.nbLinePerPage = nbLinePerPage;
+			this.currentPage = 1;
+			this.currentPageLines = 0;
+		}
+
+		public void add(HelpLine line)
+		{
+			// Check if the number of line feet in the current page
+			if(this.currentPageLines + line.lines > this.nbLinePerPage)
+			{
+				this.currentPage++;
+				this.currentPageLines = 0;
+			}
+
+			// Update the line. It will know it page number
+			this.currentPageLines += line.lines;
+			line.page = this.currentPage;
+
+			// Add line to the list
+			this.lines.add(line);
+		}
 	}
 }

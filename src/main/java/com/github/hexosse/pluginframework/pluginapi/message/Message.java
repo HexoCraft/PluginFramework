@@ -20,6 +20,7 @@ import com.github.hexosse.pluginframework.pluginapi.message.predifined.Footer;
 import com.github.hexosse.pluginframework.pluginapi.message.predifined.Header;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +163,7 @@ public class Message
 
     protected String line(char c)
     {
-        int max = 51 -(ChatColor.stripColor(prefix).length() + 1);
+        int max = ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH -(ChatColor.stripColor(prefix).length() + 1);
         String string = (prefix.isEmpty()==false ? prefix + " " : "");
 
         for(int i = 0; i < max; i++)
@@ -172,7 +173,7 @@ public class Message
 
     protected String line(char c, String s)
     {
-        int max = 51 -(ChatColor.stripColor(prefix).length() + 1);
+        int max = ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH -(ChatColor.stripColor(prefix).length() + 1);
         String string = (prefix.isEmpty()==false ? prefix + " " : "");
 
         s = ChatColor.stripColor(s);
