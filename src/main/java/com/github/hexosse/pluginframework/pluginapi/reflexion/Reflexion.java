@@ -63,7 +63,7 @@ public class Reflexion
      * @exception NoSuchMethodException if a matching method is not found
      *            or if the name is "&lt;init&gt;"or "&lt;clinit&gt;".
      */
-    public static Constructor<?> getConstructorWithExecption(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException
+    public static Constructor<?> getConstructorWithException(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException
     {
         Constructor<?> constructor = clazz.getConstructor(parameterTypes);
         if(constructor!=null) {
