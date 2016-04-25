@@ -59,7 +59,7 @@ public class MessageText
 
 	public static void initEN_en()
 	{
-		help_for_command = "Help for command";
+		help_for_command = "Help for";
 
 		commmand_command = "Command";
 		commmand_aliases = "Aliases";
@@ -80,7 +80,7 @@ public class MessageText
 
 	public static void initFR_fr()
 	{
-		help_for_command = "Aide pour la commande";
+		help_for_command = "Aide pour";
 
 		commmand_command = "Commande";
 		commmand_aliases = "Alias";
