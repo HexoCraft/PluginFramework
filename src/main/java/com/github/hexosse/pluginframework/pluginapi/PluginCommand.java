@@ -657,14 +657,11 @@ public abstract class PluginCommand<PluginClass extends Plugin> extends Command 
 				if(subCommand != null)
 				{
 					String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
-					completions = subCommand.tabComplete(sender, alias, subArgs);
+					if(subArgs.length > 0) return subCommand.tabComplete(sender, alias, subArgs);
 				}
-				// Else, it could be the command with args
-				else
-					completions = this.onTabComplete(new CommandInfo(sender, this, alias, args, null));
 			}
-			else
-				completions = this.onTabComplete(new CommandInfo(sender, this, alias, args, null));
+
+			completions = this.onTabComplete(new CommandInfo(sender, this, alias, args, null));
 		}
 		catch(Throwable ex)
 		{
