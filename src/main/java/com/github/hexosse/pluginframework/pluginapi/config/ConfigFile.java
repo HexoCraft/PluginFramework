@@ -119,6 +119,16 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
         this.templateName = templateName;
     }
 
+    public String GetTemplateName()
+    {
+        return templateName;
+    }
+
+    public YamlConfiguration getYaml()
+    {
+        return yaml;
+    }
+
     public boolean load()
     {
         try
@@ -202,14 +212,6 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * @return Teh tempalte name
-     */
-    public String GetTemplateName()
-    {
-        return templateName;
     }
 
     public boolean save()
@@ -612,13 +614,16 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
         return null;
     }
 
-    private final Object serializeObject(final Object object)
+    public final Object serializeObject(final Object object)
     {
         if(object instanceof String) {
             return object.toString().replace(ChatColor.COLOR_CHAR, '&');
         }
         if(object instanceof Enum) {
             return ((Enum<?>)object).name();
+        }
+        if(object instanceof ConfigObject) {
+            return ((ConfigObject)object).serializeObject(this);
         }
         if(object instanceof Map) {
             String tempSection = "temp_section";
@@ -658,7 +663,7 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
         return object;
     }
 
-    private final Object deserializeObject(final Class<?> aClass, final Object object) throws ParseException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException
+    public final Object deserializeObject(final Class<?> aClass, final Object object) throws ParseException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException
     {
         if(aClass.isPrimitive()) {
             return Primitives.wrap(aClass).getMethod("valueOf", String.class).invoke(this, object.toString());
@@ -670,6 +675,12 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
 
         else if(aClass.isEnum() || object instanceof Enum<?>) {
             return Enum.valueOf((Class<? extends Enum>) aClass, object.toString());
+        }
+
+        else if(ConfigObject.class.isAssignableFrom(aClass) || object instanceof ConfigObject) {
+            final Object configObject = aClass.newInstance();
+            aClass.getMethod("deserializeObject", ConfigFile.class, ConfigurationSection.class).invoke(configObject, this, (ConfigurationSection)object);
+            return configObject;
         }
 
         else if(Map.class.isAssignableFrom(aClass) || object instanceof Map) {
