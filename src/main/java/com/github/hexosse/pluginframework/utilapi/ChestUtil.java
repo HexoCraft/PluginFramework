@@ -85,7 +85,8 @@ public class ChestUtil
      */
     public static boolean isChest(InventoryHolder holder)
     {
-        if (holder == null) throw new NullPointerException("holder");
+        if (holder == null)
+            return false;
 
         return holder instanceof Chest;
     }
@@ -109,7 +110,8 @@ public class ChestUtil
      */
     public static boolean isDoubleChest(InventoryHolder holder)
     {
-        if (holder == null) throw new NullPointerException("holder");
+        if (holder == null)
+            return false;
 
         return holder instanceof DoubleChest;
     }
@@ -163,11 +165,13 @@ public class ChestUtil
      */
     public static boolean isTrappedChest(InventoryHolder holder)
     {
-        if (holder == null) throw new NullPointerException("holder");
+        if (holder == null)
+            return false;
 
         Chest chest = getChest(holder);
         if(chest != null)
             return isTrappedChest(chest.getBlock());
+
         return false;
     }
 
@@ -238,7 +242,8 @@ public class ChestUtil
 
     public static Location GetChestHolderLocation(InventoryHolder holder)
     {
-        if (holder == null) throw new NullPointerException("holder");
+        if (holder == null)
+            return null;
 
         if (holder instanceof DoubleChest) {
             return ((DoubleChest)holder).getLocation();
