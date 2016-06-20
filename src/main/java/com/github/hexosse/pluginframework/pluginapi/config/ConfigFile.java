@@ -616,16 +616,22 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
 
     public final Object serializeObject(final Object object)
     {
-        if(object instanceof String) {
+        if(object == null)
+            return null;
+
+        else if(object instanceof String) {
             return object.toString().replace(ChatColor.COLOR_CHAR, '&');
         }
-        if(object instanceof Enum) {
+
+        else if(object instanceof Enum) {
             return ((Enum<?>)object).name();
         }
-        if(object instanceof ConfigObject) {
+
+        else if(object instanceof ConfigObject) {
             return ((ConfigObject)object).serializeObject(this);
         }
-        if(object instanceof Map) {
+
+        else if(object instanceof Map) {
             String tempSection = "temp_section";
             final ConfigurationSection section = yaml.createSection(tempSection);
             for(final Map.Entry<?, ?> entry : ((Map<?, ?>)object).entrySet()) {
@@ -634,14 +640,16 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             yaml.set(tempSection, null);
             return section;
         }
-        if(object instanceof List) {
+
+        else if(object instanceof List) {
             final List<Object> result = new ArrayList<Object>();
             for(final Object value : (List<?>)object) {
                 result.add(serializeObject(value));
             }
             return result;
         }
-        if(object instanceof Location) {
+
+        else if(object instanceof Location) {
             final Location location = (Location)object;
             final JSONObject jsonObject = new JSONObject();
             jsonObject.put("world", location.getWorld().getName());
@@ -652,7 +660,8 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             jsonObject.put("pitch", location.getPitch());
             return jsonObject.toJSONString();
         }
-        if(object instanceof Vector) {
+
+        else if(object instanceof Vector) {
             final Vector vector = (Vector)object;
             final JSONObject jsonObject = new JSONObject();
             jsonObject.put("x", vector.getX());
@@ -660,12 +669,16 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             jsonObject.put("z", vector.getZ());
             return jsonObject.toJSONString();
         }
-        return object;
+        else
+            return object;
     }
 
     public final Object deserializeObject(final Class<?> aClass, final Object object) throws ParseException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException
     {
-        if(aClass.isPrimitive()) {
+        if(object == null)
+            return null;
+
+        else if(aClass.isPrimitive()) {
             return Primitives.wrap(aClass).getMethod("valueOf", String.class).invoke(this, object.toString());
         }
 
@@ -678,8 +691,8 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
         }
 
         else if(ConfigObject.class.isAssignableFrom(aClass) || object instanceof ConfigObject) {
-            final Object configObject = aClass.newInstance();
-            aClass.getMethod("deserializeObject", ConfigFile.class, ConfigurationSection.class).invoke(configObject, this, (ConfigurationSection)object);
+            ConfigObject configObject = (ConfigObject)ConfigObjectCreator.create(aClass, Object.class);
+            configObject.deserializeObject(this, (ConfigurationSection)object);
             return configObject;
         }
 
