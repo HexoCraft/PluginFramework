@@ -75,6 +75,13 @@ public class Message
 		this.lines = Lists.newArrayList(new MessageLine(new MessagePart(message)));
 	}
 
+	public Message(MessageSeverity severity, String prefix, String message)
+	{
+		this(severity);
+		this.setPrefix(prefix);
+		this.add(message);
+	}
+
 	public Message(ChatColor color)
 	{
 		this.severity = new MessageSeverity(Level.INFO, color);
