@@ -37,17 +37,29 @@ public class Reflexion
      * @return the {@code Constructor<?>} that matches the specified
      * {@code clazz}  and {@code parameterTypes}
      */
-    public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException
+    public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes)
 	{
-		Constructor<?> constructor = clazz.getConstructor(parameterTypes);
-		if(constructor!=null) {
-			return constructor;
+		try
+		{
+			Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+			if(constructor!=null) {
+				return constructor;
+			}
 		}
-
-		Constructor<?> declaredConstructor = clazz.getDeclaredConstructor(parameterTypes);
-		if(declaredConstructor!=null) {
-			declaredConstructor.setAccessible(true);
-			return declaredConstructor;
+		catch(NoSuchMethodException e)
+		{
+			try
+			{
+				Constructor<?> declaredConstructor = clazz.getDeclaredConstructor(parameterTypes);
+				if(declaredConstructor!=null) {
+					declaredConstructor.setAccessible(true);
+					return declaredConstructor;
+				}
+			}
+			catch(NoSuchMethodException e1)
+			{
+				return null;
+			}
 		}
 
 		return null;
@@ -90,13 +102,17 @@ public class Reflexion
      * @return the {@code Method} object that matches the specified
      * {@code clazz} and {@code name} and {@code parameterTypes}
      */
-    public static Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException
+    public static Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes)
     {
-		Method declaredMethod = clazz.getDeclaredMethod(name, parameterTypes);
-		if(declaredMethod!=null) {
-			declaredMethod.setAccessible(true);
-			return declaredMethod;
+		try
+		{
+			Method declaredMethod = clazz.getDeclaredMethod(name, parameterTypes);
+			if(declaredMethod!=null) {
+				declaredMethod.setAccessible(true);
+				return declaredMethod;
+			}
 		}
+		catch(NoSuchMethodException ignored) {}
 
 		return null;
 	}
@@ -155,13 +171,18 @@ public class Reflexion
 	 * @return the {@code Method} object that matches the specified
 	 * {@code clazz} and {@code name} and {@code parameterTypes}
 	 */
-	public static Field getField(Class<?> clazz, String fieldName) throws NoSuchFieldException, SecurityException, IllegalAccessException
+	public static Field getField(Class<?> clazz, String fieldName)
 	{
-		Field declaredField = clazz.getDeclaredField(fieldName);
-		if(declaredField!=null && !declaredField.isAccessible()) {
-			setAccessible(declaredField);
-			return declaredField;
+		try
+		{
+			Field declaredField = clazz.getDeclaredField(fieldName);
+			if(declaredField!=null && !declaredField.isAccessible()) {
+				setAccessible(declaredField);
+				return declaredField;
+			}
 		}
+		catch(NoSuchFieldException ignored) {}
+		catch(IllegalAccessException ignored) {}
 
 		return null;
 	}
@@ -209,9 +230,16 @@ public class Reflexion
     }
 
 
-	public static Object getField(Class<?> clazz, String fieldName, Object from) throws NoSuchFieldException, SecurityException, IllegalAccessException
+	public static Object getField(Class<?> clazz, String fieldName, Object from)
 	{
-		return getField(clazz, fieldName).get(from);
+		try
+		{
+			return getField(clazz, fieldName).get(from);
+		}
+		catch(IllegalAccessException e)
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -248,7 +276,7 @@ public class Reflexion
 				Field field = getField(clazz, fieldName);
 				if(field!=null)
                     return (T)field.get(from);
-            } catch(NoSuchFieldException | IllegalAccessException  ignored) {}
+            } catch(IllegalAccessException  ignored) {}
 		} while (clazz.getSuperclass()!=Object.class && ((clazz = clazz.getSuperclass())!=null));
 
         // in case of failure
