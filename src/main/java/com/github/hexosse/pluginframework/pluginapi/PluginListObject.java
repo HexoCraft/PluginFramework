@@ -21,27 +21,19 @@ import java.util.*;
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class ListObject<E, PluginClass extends Plugin> extends PluginObject<PluginClass>
+public class PluginListObject<E, PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
 	/**
 	 * The list.
 	 */
-	private ArrayList<E> list = null;
+	private ArrayList<E> list = new ArrayList<E>();
 
 	/**
 	 * @param plugin The plugin that this object belong to.
 	 */
-	public ListObject(PluginClass plugin)
+	public PluginListObject(PluginClass plugin)
 	{
 		super(plugin);
-		newList();
-	}
-
-	/**
-	 * New instance of the list
-	 */
-	public void newList() {
-		list = new ArrayList<E>();
 	}
 
 	/**

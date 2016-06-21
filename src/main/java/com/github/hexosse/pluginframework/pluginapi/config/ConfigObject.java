@@ -30,5 +30,5 @@ public interface ConfigObject
 	Object serializeObject(final ConfigFile<?> config);
 
 	// Used by {@Link ConfigFile} to deserialize an object
-	void deserializeObject(final ConfigFile<?> config, final ConfigurationSection section) throws ParseException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException;
+	void deserializeObject(final ConfigFile<?> config, final Object object) throws ParseException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException;
 }

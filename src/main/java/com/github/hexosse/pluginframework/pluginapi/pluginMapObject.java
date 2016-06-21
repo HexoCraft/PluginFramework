@@ -23,27 +23,19 @@ import java.util.Set;
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class MapObject<K, V, PluginClass extends Plugin> extends PluginObject<PluginClass>
+public class PluginMapObject<K, V, PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
 	/**
 	 * The map.
 	 */
-	private HashMap<K, V> map = null;
+	private HashMap<K, V> map = new HashMap<K, V>();
 
 	/**
 	 * @param plugin The plugin that this object belong to.
 	 */
-	public MapObject(PluginClass plugin)
+	public PluginMapObject(PluginClass plugin)
 	{
 		super(plugin);
-		newMap();
-	}
-
-	/**
-	 * New instance of the map
-	 */
-	public void newMap() {
-		map = new HashMap<K, V>();
 	}
 
 	/**
