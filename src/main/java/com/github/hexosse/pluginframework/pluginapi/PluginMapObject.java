@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * @author <b>hexosse</b> (<a href="https://github.comp/hexosse">hexosse on GitHub</a>))
  */
-public class PluginMapObject2<K, V, PluginClass extends Plugin> extends PluginObject<PluginClass>
+public class PluginMapObject<K, V, PluginClass extends Plugin> extends PluginObject<PluginClass>
 {
 	/**
 	 * The map.
@@ -33,7 +33,7 @@ public class PluginMapObject2<K, V, PluginClass extends Plugin> extends PluginOb
 	/**
 	 * @param plugin The plugin that this object belong to.
 	 */
-	public PluginMapObject2(PluginClass plugin)
+	public PluginMapObject(PluginClass plugin)
 	{
 		super(plugin);
 	}
