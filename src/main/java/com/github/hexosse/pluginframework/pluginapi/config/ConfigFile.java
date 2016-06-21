@@ -19,6 +19,7 @@ package com.github.hexosse.pluginframework.pluginapi.config;
 import com.github.hexosse.pluginframework.pluginapi.Plugin;
 import com.github.hexosse.pluginframework.pluginapi.PluginObject;
 import com.github.hexosse.pluginframework.pluginapi.config.Location.LocationList;
+import com.github.hexosse.pluginframework.pluginapi.reflexion.Reflexion;
 import com.google.common.primitives.Primitives;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -157,8 +158,10 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             if(configHeader!=null) header = configHeader.comment();
 
             // Update config values
-            for(Field field : getClass().getDeclaredFields())
+            for(Field field : getClass().getDeclaredFields()) {
+                field.setAccessible(true);
                 loadField(field);
+            }
 
             // Update footer
             final ConfigFooter configFooter = getClass().getAnnotation(ConfigFooter.class);
@@ -222,8 +225,10 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             for(Field field : getClass().getDeclaredFields())
             {
                 final ConfigOptions configOption = field.getAnnotation(ConfigOptions.class);
-                if(configOption!=null)
+                if(configOption!=null) {
+                    field.setAccessible(true);
                     saveField(field, configOption.path());
+                }
             }
 
             // Save the file using YamlConfiguration
@@ -627,7 +632,7 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             return ((Enum<?>)object).name();
         }
 
-        else if(object instanceof ConfigObject) {
+        else if(object instanceof PluginObject && object instanceof ConfigObject) {
             return ((ConfigObject)object).serializeObject(this);
         }
 
@@ -690,9 +695,9 @@ public class ConfigFile<PluginClass extends Plugin> extends PluginObject<PluginC
             return Enum.valueOf((Class<? extends Enum>) aClass, object.toString());
         }
 
-        else if(ConfigObject.class.isAssignableFrom(aClass) || object instanceof ConfigObject) {
-            ConfigObject configObject = (ConfigObject)ConfigObjectCreator.create(aClass, Object.class);
-            configObject.deserializeObject(this, (ConfigurationSection)object);
+        else if((PluginObject.class.isAssignableFrom(aClass) && ConfigObject.class.isAssignableFrom(aClass)) || (object instanceof PluginObject && object instanceof ConfigObject)) {
+            final Object configObject = Reflexion.getConstructor(aClass, plugin.getClass()).newInstance(plugin);
+            aClass.getMethod("deserializeObject", ConfigFile.class, Object.class).invoke(configObject, this, object);
             return configObject;
         }
 
